@@ -129,6 +129,13 @@ An examples directory for practical reviews, rewrites, and pattern extraction ca
 
 A contributor guide describing what kinds of additions are most valuable to this repository.
 
+### 6. [`scorecard.md`](./scorecard.md)
+
+一张可以直接拿来给 skill 打分的评审表。  
+适合做 review、重写前后对比、团队统一标准。
+
+A practical scorecard for reviewing and comparing skill quality.
+
 ---
 
 ## 我关注的优秀 skill 品质 | What Makes an Excellent Skill
