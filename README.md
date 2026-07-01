@@ -150,26 +150,33 @@ It captures transferable mechanisms from strong skills.
 A research note based on hot skills from ClawHub and GitHub.  
 It summarizes the recurring qualities of popular, high-quality skills.
 
-### 4. [`examples/`](./examples/)
+### 4. [`research-andrej-karpathy-skills.md`](./research-andrej-karpathy-skills.md)
+
+针对 `multica-ai/andrej-karpathy-skills` 的结构拆解与模式提炼。  
+重点分析它为什么传播力强，以及哪些机制真正值得复用。
+
+A focused breakdown of `andrej-karpathy-skills`, including what is reusable versus what is mainly strong packaging.
+
+### 5. [`examples/`](./examples/)
 
 示例目录，放“怎么审 skill、怎么改 skill、怎么提炼 pattern”的实战样例。
 
 An examples directory for practical reviews, rewrites, and pattern extraction cases.
 
-### 5. [`CONTRIBUTING.md`](./CONTRIBUTING.md)
+### 6. [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 贡献指南，说明适合提交什么内容、建议怎样沉淀 pattern、怎样写研究笔记和 review 示例。
 
 A contributor guide describing what kinds of additions are most valuable to this repository.
 
-### 6. [`scorecard.md`](./scorecard.md)
+### 7. [`scorecard.md`](./scorecard.md)
 
 一张可以直接拿来给 skill 打分的评审表。  
 适合做 review、重写前后对比、团队统一标准。
 
 A practical scorecard for reviewing and comparing skill quality.
 
-### 7. [`CHANGELOG.md`](./CHANGELOG.md)
+### 8. [`CHANGELOG.md`](./CHANGELOG.md)
 
 记录仓库的重要演进，帮助后来者理解这个项目是怎么逐步长起来的。
 

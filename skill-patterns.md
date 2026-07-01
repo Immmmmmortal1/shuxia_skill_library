@@ -259,6 +259,78 @@ Portability is valuable only if the behavior contract survives migration.
 
 ---
 
+## [PAT-016] Failure-Mode-First
+
+**Definition**
+Start by naming the most common ways a skill is likely to go wrong, then write constraints against those failure modes.
+
+**Why it works**
+Many weak skills only describe desired behavior. Stronger skills also defend against predictable bad defaults.
+
+**How to encode**
+- add a common failure modes section
+- add explicit negative constraints
+- turn each repeated failure into a workflow or gating rule
+
+**Example source**
+- `andrej-karpathy-skills`: highlights guessing, hidden confusion, overengineering, and unrelated edits
+
+---
+
+## [PAT-017] Surgical Scope
+
+**Definition**
+Every change or action should be traceable to the user's goal, with no opportunistic expansion.
+
+**Why it works**
+Agents frequently drift by “improving nearby things.” This pattern keeps work tight and reviewable.
+
+**How to encode**
+- prohibit unrelated refactors
+- require that changes map back to the request
+- default to minimal, target-linked edits
+
+**Example source**
+- `andrej-karpathy-skills`: “surgical changes”
+
+---
+
+## [PAT-018] Success-Criteria-Driven Execution
+
+**Definition**
+Do not only tell the agent what to do. Define what counts as success.
+
+**Why it works**
+Success criteria reduce ambiguity and align execution toward verifiable outcomes instead of vague effort.
+
+**How to encode**
+- define completion conditions
+- define validation expectations
+- convert tasks into outcome checks where possible
+
+**Example source**
+- `andrej-karpathy-skills`: goal-driven execution
+
+---
+
+## [PAT-019] Assumption Exposure
+
+**Definition**
+When multiple interpretations or hidden assumptions exist, the agent must surface them instead of silently picking one.
+
+**Why it works**
+Silent assumptions are a major source of drift, misalignment, and expensive rework.
+
+**How to encode**
+- require clarification on critical ambiguity
+- require explicit statement of assumptions
+- ban silent branch selection when it materially affects output
+
+**Example source**
+- `andrej-karpathy-skills`: do not guess, expose confusion and inconsistency
+
+---
+
 ## Huashu Design Notes
 
 The following ideas are worth reusing from `huashu-design`:
@@ -269,6 +341,22 @@ The following ideas are worth reusing from `huashu-design`:
 - safe fallback when context is weak
 - anti-slop enforcement through explicit negative lists
 - strong emphasis that important rules belong in flow, not just prose
+
+---
+
+## Andrej Karpathy Skills Notes
+
+The following ideas are worth reusing from `andrej-karpathy-skills`:
+
+- define repeated agent failure modes explicitly
+- constrain changes to user-goal-traceable scope
+- define success criteria, not just commands
+- surface assumptions instead of silently guessing
+
+What is more packaging than pattern:
+
+- the “four principles” framing is very effective for communication
+- but the deeper reusable value lies in the negative constraints and goal semantics
 
 ---
 
