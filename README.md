@@ -26,6 +26,39 @@ The focus is not whether a skill sounds smart, but whether it is:
 
 ---
 
+## 快速开始 | Quick Start
+
+如果你是第一次使用这个仓库，建议按这个顺序看：
+
+1. 先读 [`README.md`](./README.md)
+   - 了解仓库定位和目标
+
+2. 再读 [`SKILL.md`](./SKILL.md)
+   - 了解主 skill 怎么审 skill
+
+3. 再看 [`scorecard.md`](./scorecard.md)
+   - 学会怎么给 skill 打分
+
+4. 再看 [`examples/review-huashu-design.md`](./examples/review-huashu-design.md)
+   - 看一个优秀 skill 的正面案例
+
+5. 再看 [`examples/review-weak-skill.md`](./examples/review-weak-skill.md)
+   - 看一个典型弱 skill 为什么不听话
+
+6. 最后看 [`skill-patterns.md`](./skill-patterns.md)
+   - 把可复用模式沉淀下来
+
+Suggested first path through the repository:
+
+1. Read `README.md`
+2. Read `SKILL.md`
+3. Read `scorecard.md`
+4. Read the strong example
+5. Read the weak example
+6. Then use `skill-patterns.md` as your reusable reference
+
+---
+
 ## 为什么做这个仓库 | Why This Exists
 
 很多 skill 看起来很严格，但实际并不“听话”。
@@ -135,6 +168,12 @@ A contributor guide describing what kinds of additions are most valuable to this
 适合做 review、重写前后对比、团队统一标准。
 
 A practical scorecard for reviewing and comparing skill quality.
+
+### 7. [`CHANGELOG.md`](./CHANGELOG.md)
+
+记录仓库的重要演进，帮助后来者理解这个项目是怎么逐步长起来的。
+
+A changelog for meaningful repository evolution.
 
 ---
 
