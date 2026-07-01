@@ -117,6 +117,18 @@ It captures transferable mechanisms from strong skills.
 A research note based on hot skills from ClawHub and GitHub.  
 It summarizes the recurring qualities of popular, high-quality skills.
 
+### 4. [`examples/`](./examples/)
+
+示例目录，放“怎么审 skill、怎么改 skill、怎么提炼 pattern”的实战样例。
+
+An examples directory for practical reviews, rewrites, and pattern extraction cases.
+
+### 5. [`CONTRIBUTING.md`](./CONTRIBUTING.md)
+
+贡献指南，说明适合提交什么内容、建议怎样沉淀 pattern、怎样写研究笔记和 review 示例。
+
+A contributor guide describing what kinds of additions are most valuable to this repository.
+
 ---
 
 ## 我关注的优秀 skill 品质 | What Makes an Excellent Skill
