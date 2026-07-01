@@ -294,6 +294,16 @@ This repository is for:
 - people who want reusable mechanisms instead of one-off prompts
 - people who want more stable and controllable agent behavior
 
+如果你想参与完善这个仓库，现在也可以直接通过：
+
+- GitHub Issues 提交 bug、pattern 提案、skill review 请求
+- GitHub Pull Requests 提交文档、模式、研究笔记和示例增强
+
+If you want to contribute, you can now use:
+
+- GitHub Issues for bugs, pattern proposals, and skill review requests
+- GitHub Pull Requests for docs, patterns, research notes, and examples
+
 ---
 
 ## 路线图 | Roadmap
