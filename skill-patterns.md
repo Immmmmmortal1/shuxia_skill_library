@@ -259,7 +259,63 @@ Portability is valuable only if the behavior contract survives migration.
 
 ---
 
-## [PAT-016] Failure-Mode-First
+## [PAT-016] Legal Blocked Exit
+
+**Definition**
+Separate “completed successfully” from “stopped safely because a required external condition is unavailable.”
+
+**Why it works**
+Without a legal blocked exit, agents either falsely claim completion or leave workflows in ambiguous pending states.
+
+**How to encode**
+- define a `Blocked Gate Result`
+- require exact blocker source, attempted action, exact error, completed gates, and safe next action
+- make validators accept `blocked-valid` as a safe stop, not as completion
+
+**Example source**
+- `dev-flow-ui`: real-device launch can be blocked by developer profile trust, while earlier UI gates still remain valid.
+
+---
+
+## [PAT-017] Evidence Packet Levels
+
+**Definition**
+Review evidence should be structured by review target instead of using one oversized packet for every call.
+
+**Why it works**
+Prevents summary-only reviews while avoiding unnecessary overhead for every small checkpoint.
+
+**How to encode**
+- Level A: source evidence and gates
+- Level B: Level A plus implementation diff/build evidence
+- Level C: Level B plus runtime screenshot/view hierarchy/action history
+
+**Example source**
+- `dev-flow-ui`: MCP review packets distinguish preflight/gates, implementation, and final runtime review.
+
+---
+
+## [PAT-018] Ownership Count Split
+
+**Definition**
+Element inventory should count app-owned UI separately from system UI, background context, and decorative assets.
+
+**Why it works**
+Prevents agents from treating keyboards, background screenshots, or decorative context as missing native controls.
+
+**How to encode**
+- app-owned visible element count
+- system UI element count
+- background/context element count
+- decorative asset count
+- native app-owned visible element count
+
+**Example source**
+- `dev-flow-ui`: separates modal sheet controls from iOS keyboard and background Mine/More context.
+
+---
+
+## [PAT-019] Failure-Mode-First
 
 **Definition**
 Start by naming the most common ways a skill is likely to go wrong, then write constraints against those failure modes.
@@ -277,7 +333,7 @@ Many weak skills only describe desired behavior. Stronger skills also defend aga
 
 ---
 
-## [PAT-017] Surgical Scope
+## [PAT-020] Surgical Scope
 
 **Definition**
 Every change or action should be traceable to the user's goal, with no opportunistic expansion.
@@ -295,7 +351,7 @@ Agents frequently drift by “improving nearby things.” This pattern keeps wor
 
 ---
 
-## [PAT-018] Success-Criteria-Driven Execution
+## [PAT-021] Success-Criteria-Driven Execution
 
 **Definition**
 Do not only tell the agent what to do. Define what counts as success.
@@ -313,7 +369,7 @@ Success criteria reduce ambiguity and align execution toward verifiable outcomes
 
 ---
 
-## [PAT-019] Assumption Exposure
+## [PAT-022] Assumption Exposure
 
 **Definition**
 When multiple interpretations or hidden assumptions exist, the agent must surface them instead of silently picking one.
@@ -371,3 +427,101 @@ From ClawHub and GitHub hot skills sampled on 2026-07-01, strong skills repeated
 - explicit decomposition and routing
 - persistent state for long workflows
 - stable semantics even when exported across agents
+
+---
+
+## [PAT-023] Invocation Class Split
+
+**Definition**
+Separate skills by who is allowed to invoke them: explicit user commands orchestrate, model-invoked skills carry reusable discipline.
+
+**Why it works**
+It reduces accidental workflow recursion while keeping repeatable sub-discipline available to the agent when the task naturally matches.
+
+**How to encode**
+- mark user-only skills with an explicit invocation boundary
+- keep router/orchestrator skills user-invoked when possible
+- allow model invocation only for narrow, reusable behaviors with strong trigger descriptions
+- document which invocation class may call which other class
+
+**Example source**
+- `mattpocock/skills`: user-invoked skills orchestrate; model-invoked engineering skills such as debugging, TDD, domain modeling, and design hold reusable process.
+
+---
+
+## [PAT-024] Red-Capable Feedback Gate
+
+**Definition**
+Before diagnosing or fixing, require one runnable feedback loop that can fail on the exact target symptom.
+
+**Why it works**
+It blocks conclusion-first debugging and turns "I think this is fixed" into an observable pass/fail contract.
+
+**How to encode**
+- require the exact command or script path
+- require that it has already been run at least once
+- require red-capable, deterministic, fast, and agent-runnable properties
+- if no loop can be built, stop with tried attempts and needed artifact/access
+
+**Example source**
+- `mattpocock/skills` `diagnosing-bugs`: Phase 1 cannot complete without a tight command that can go red on the user's bug.
+
+---
+
+## [PAT-025] Skill Supply-Chain Trust Ladder
+
+**Definition**
+Unknown skills must pass source, code, permission, and risk checks before installation or execution.
+
+**Why it works**
+Public skill registries are executable instruction supply chains. Popularity and a passing registry badge reduce uncertainty but do not replace local review.
+
+**How to encode**
+- source check before install
+- mandatory all-file review for untrusted skills
+- reject list for credential access, obfuscation, unknown network calls, broad file reads, and elevated permissions
+- risk classes with clear actions: install, caution, human approval, or reject
+- output a vetting report with files reviewed, permissions, red flags, risk level, and verdict
+
+**Example source**
+- ClawHub `Skill Vetter`: trust hierarchy plus red-flag and permission-scope gates.
+
+---
+
+## [PAT-026] Memory Temperature Tiers
+
+**Definition**
+Persistent agent memory should be tiered by load frequency and stability instead of kept in one ever-growing file.
+
+**Why it works**
+Hot memory stays small and always useful, while project/domain/archive tiers keep history available without bloating every run.
+
+**How to encode**
+- HOT: always-loaded, line-limited memory
+- WARM: project or domain files loaded on demand
+- COLD: archived or decayed patterns
+- promotion requires repeated signal, not one-off task context
+- expose memory stats and explicit forget/export operations
+
+**Example source**
+- ClawHub `Self-Improving + Proactive Agent`: hot `memory.md`, indexed warm project/domain files, cold archive, promotion after repeated patterns.
+
+---
+
+## [PAT-027] Context Load Budget
+
+**Definition**
+Treat every always-visible description and rule as a cost; keep only text that changes invocation or execution behavior.
+
+**Why it works**
+Skills degrade when trigger prose, reference material, and stale advice accumulate. Budgeting context forces precise triggers, progressive disclosure, and pruning.
+
+**How to encode**
+- put only trigger branches in model-facing descriptions
+- move branch-specific reference behind context pointers
+- delete no-op lines that do not change behavior
+- split by invocation or sequence only when the split earns its load cost
+- keep one source of truth per behavioral rule
+
+**Example source**
+- `mattpocock/skills` `writing-great-skills`: context load, information hierarchy, no-op pruning, and progressive disclosure.
