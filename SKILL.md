@@ -2,7 +2,7 @@
 name: shuxia-skill-library
 description: Use when creating, reviewing, or refining an agent skill and the goal is to make the skill more obedient, better bounded, and harder to misuse. Especially useful when extracting reusable ideas from strong external skills, turning them into boundary rules, constraint patterns, review checklists, and concrete revisions for local skills.
 metadata:
-  version: 0.1.3
+  version: 0.1.4
 ---
 
 # Shuxia Skill Library
@@ -272,6 +272,25 @@ When this skill is used to review a local skill, produce:
 - `PASS`, `WARNING`, or `ERROR`
 - each finding tied to one of the review dimensions
 - a concrete rewrite suggestion, not only criticism
+- default to a `module-first review`, not a loose issue dump
+
+When this skill is used to review a local skill, the default output format should be:
+
+- `PASS`, `WARNING`, or `ERROR`
+- `Current Sections`
+- `How Existing Sections Should Change`
+- `Missing Sections To Add`
+- `Why Each Change Matters`
+
+Rules for this review format:
+
+- start from the target skill's current structure instead of abstract theory
+- explain each change in the vocabulary of the target skill's existing sections
+- if a section is good, say it should be kept and why
+- if a section is weak, say whether it should be tightened, split, or rewritten
+- if a section is missing, say where it should be inserted and what job it serves
+- do not begin with a generic taxonomy unless the user explicitly asks for one
+- findings may still reference review dimensions, but they should be embedded inside the section-based review
 
 When this skill is used to create or revise a skill, the revised skill must include:
 
@@ -375,10 +394,11 @@ Each good external skill should leave behind reusable boundary patterns so futur
 
 ## Version
 
-Current version: 0.1.3
+Current version: 0.1.4
 
 ## Version History
 
+- 0.1.4 - Fix skill-review output to default to a section-based module review: current sections, how to change them, what to add, and why each change matters.
 - 0.1.3 - Add routing discoverability review, scale-aware skill hit-rate analysis, and rewrite rules for names, descriptions, hierarchy, and recall-then-rerank routing.
 - 0.1.2 - Add artifact quality review, including mandatory canvas contract checks for image-generation skills.
 - 0.1.1 - Add `Streaming Confirmation Mode` so skill creation and revision must ask scoped questions one by one, summarize confirmed decisions, and wait for final approval before writing.
