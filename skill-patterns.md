@@ -259,6 +259,80 @@ Users often mean “do the simple mechanical thing” when they say “替换截
 
 ---
 
+## [PAT-021] Trigger Discoverability
+
+**Definition**
+Skill `name` and `description` should be written for routing recall, not only human readability.
+
+**Why it works**
+As the library grows, the router often sees metadata before full skill content. If retrieval fields are vague, a strong skill still gets missed.
+
+**How to encode**
+- describe concrete user scenarios
+- include phrases a caller would naturally use
+- prefer `when to use` wording over abstract capability labels
+- keep adjacent skills semantically distinguishable
+
+**Example source**
+- skill-routing discussion: `name + description` behave like title and abstract in retrieval
+
+---
+
+## [PAT-022] Hierarchy Before Scale
+
+**Definition**
+When many skills compete, organize them into families or routing layers before final selection.
+
+**Why it works**
+Flat lists force the model to compare too many near neighbors at once, which makes routing unstable.
+
+**How to encode**
+- add top-level categories
+- define sub-skill families
+- route broad domain first, then specific skill
+- document the expected parent category for each skill
+
+**Example source**
+- skill-routing discussion: large libraries should narrow search space before detailed selection
+
+---
+
+## [PAT-023] Negative Routing Boundary
+
+**Definition**
+A skill should state not only what it handles, but what nearby requests it must not absorb.
+
+**Why it works**
+Collisions often happen between related skills, not unrelated ones. Negative boundaries reduce false positives.
+
+**How to encode**
+- add `Do not use when`
+- add `when not to use` examples
+- mention adjacent task types that should route elsewhere
+
+**Example source**
+- skill-routing discussion: negative examples reduce accidental activation
+
+---
+
+## [PAT-024] Recall Then Rerank
+
+**Definition**
+At larger scale, route by retrieving a small candidate set first, then ranking those candidates.
+
+**Why it works**
+Once the library is large enough, skill routing behaves like search. Two-stage selection is more stable than asking one model pass to choose from everything.
+
+**How to encode**
+- recall top-k by embeddings, keywords, or trigger phrases
+- ask the model to choose only among recalled candidates
+- log misses to improve metadata and reranking
+
+**Example source**
+- skill-routing discussion: skill routing becomes a retrieval problem at scale
+
+---
+
 ## [PAT-016] Streaming Confirmation Gate
 
 **Definition**

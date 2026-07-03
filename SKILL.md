@@ -2,7 +2,7 @@
 name: shuxia-skill-library
 description: Use when creating, reviewing, or refining an agent skill and the goal is to make the skill more obedient, better bounded, and harder to misuse. Especially useful when extracting reusable ideas from strong external skills, turning them into boundary rules, constraint patterns, review checklists, and concrete revisions for local skills.
 metadata:
-  version: 0.1.2
+  version: 0.1.3
 ---
 
 # Shuxia Skill Library
@@ -17,6 +17,7 @@ Use it to study why a strong skill behaves well, extract its reusable boundary d
 - operationally constrained
 - hard to hijack
 - easy to trigger correctly
+- easy to discover and route correctly at scale
 - consistent in output
 
 This skill also acts as a normalization reviewer for new or existing skills in the local library.
@@ -58,6 +59,15 @@ It becomes obedient by turning judgment into structure:
 - define what evidence must come **before** generation
 - define what output shape is **required**
 
+When a skill stops getting selected reliably as the library grows, treat that as a `routing system` problem first, not a `prompt polish` problem first.
+
+At scale, skill selection behaves like retrieval:
+
+- `name` and `description` act like title and abstract
+- trigger conditions act like recall features
+- `do not use` rules act like negative constraints
+- skill families and folders act like search-space reduction
+
 If a rule is important, it should appear in the workflow, not only in prose.
 
 When the task is skill creation or revision, a strong skill-for-skills must also turn `unclear intent` into a confirmation sequence before any writing begins.
@@ -96,6 +106,11 @@ Always review a target skill across these dimensions:
 8. `Artifact Quality Boundary`
    - For generated files, does the skill define technical validity checks beyond prose quality?
    - For image assets, does it reject wrong canvas size, thumbnail templates, and invalid output dimensions?
+
+9. `Routing Discoverability Boundary`
+   - Can the skill be found reliably from its `name`, `description`, and trigger wording?
+   - Does it describe when to use it, not only what it does?
+   - When many neighboring skills exist, is its boundary distinctive enough to reduce collisions?
 
 ## Workflow
 
@@ -177,7 +192,29 @@ Look for mechanisms such as:
 If a strength is only stylistic, do not over-credit it.
 Prefer mechanism over tone.
 
-### Step 6 — Convert observations into reusable patterns
+### Step 6 — Check routing and discoverability before rewriting internals
+
+If the complaint is low hit rate, wrong-skill selection, or missing skill activation, inspect these before changing the skill body:
+
+- `name`
+- frontmatter `description`
+- trigger scenarios in `Use when`
+- negative boundaries in `Do not use when`
+- whether neighboring skills sound too similar
+- whether the library needs hierarchy instead of a flat list
+
+Hard rules:
+
+- do not only polish the skill body while skipping `name / description / trigger conditions`
+- when many skills compete, do not frame the issue as prompt quality alone; analyze it as retrieval, ranking, and constraint design
+
+If evidence is missing, do the smallest safe diagnosis first. Then stop and ask for at least:
+
+- target skill `name`
+- target skill `description`
+- several adjacent or competing skill samples
+
+### Step 7 — Convert observations into reusable patterns
 
 For every strong idea, rewrite it as:
 
@@ -188,7 +225,7 @@ For every strong idea, rewrite it as:
 
 Store distilled ideas in [skill-patterns.md](/Users/xiaomao11/.codex/skills/shuxia-skill-library/skill-patterns.md).
 
-### Step 7 — Audit the local target skill
+### Step 8 — Audit the local target skill
 
 When reviewing a local skill, report:
 
@@ -199,19 +236,25 @@ When reviewing a local skill, report:
 - missing fallback behavior
 - missing output contract
 - missing canvas or artifact validation for generated files
+- weak trigger wording that hurts discoverability
+- flat taxonomy or overlapping neighbors that hurt routing precision
 
-### Step 8 — Rewrite toward obedience
+### Step 9 — Rewrite toward obedience
 
 Prefer these repairs:
 
 - replace vague authority language with explicit routing rules
+- rewrite `name` and `description` around trigger scenarios, not just capability labels
 - move critical constraints into ordered workflow
 - add “do not use when” lists
+- add `when not to use` examples when collisions are common
 - add fallback modes for missing context
 - add output contract sections
 - add canvas or artifact contracts when outputs have required technical dimensions
 - add anti-pattern or anti-slop sections
 - add confirmation gates when the skill is prone to drifting before user intent is locked
+- split broad skill families into hierarchy when a flat library causes collisions
+- recommend `recall then rerank` routing when the library is too large for full-list selection
 
 ## Output Contract
 
@@ -227,7 +270,7 @@ When this skill is used for analysis, produce:
 When this skill is used to review a local skill, produce:
 
 - `PASS`, `WARNING`, or `ERROR`
-- each finding tied to one of the seven review dimensions
+- each finding tied to one of the review dimensions
 - a concrete rewrite suggestion, not only criticism
 
 When this skill is used to create or revise a skill, the revised skill must include:
@@ -237,6 +280,14 @@ When this skill is used to create or revise a skill, the revised skill must incl
 - workflow with ordered constraints
 - fallback behavior if context is insufficient
 - output contract
+
+When the target problem is skill hit rate or routing quality, the rewrite plan must also include:
+
+- `name` and `description` changes that improve retrieval
+- trigger-scene wording, not only functional wording
+- negative boundary wording for nearby collisions
+- hierarchy or family split suggestions when the library is too flat
+- retrieval or rerank suggestions when scale makes direct routing unstable
 
 Before the revised skill is written, this skill must produce:
 
@@ -282,6 +333,18 @@ The following ideas are already accepted into this library and should be reused 
 - `Canvas Contract`
   - For image-generation skills, exact canvas size and output dimensions must be declared and validated.
 
+- `Trigger Discoverability`
+  - Names and descriptions should optimize for retrieval by describing when to use the skill.
+
+- `Hierarchy Before Scale`
+  - When many skills compete, route through category layers before final skill selection.
+
+- `Negative Routing Boundary`
+  - State not just what the skill does, but which adjacent requests it must not absorb.
+
+- `Recall Then Rerank`
+  - At larger scale, retrieve a small candidate set first, then let the model decide among them.
+
 `huashu-design` is a reference example for:
 
 - strong role lock
@@ -297,6 +360,9 @@ The following ideas are already accepted into this library and should be reused 
 - Copying domain-specific rules into unrelated skills
 - Writing principles without fallback behavior
 - Letting descriptions summarize workflow instead of trigger conditions
+- Treating hit-rate problems as body-prompt problems while skipping routing fields
+- Keeping dozens of near-duplicate skills in one flat list without hierarchy
+- Omitting `when not to use` guidance for skills with nearby overlaps
 - Starting to draft the skill before the user has confirmed the core decisions
 - Asking five clarification questions at once and then guessing from partial answers
 - Reviewing an image-generation skill without checking exact canvas size and output dimension enforcement
@@ -309,10 +375,11 @@ Each good external skill should leave behind reusable boundary patterns so futur
 
 ## Version
 
-Current version: 0.1.2
+Current version: 0.1.3
 
 ## Version History
 
+- 0.1.3 - Add routing discoverability review, scale-aware skill hit-rate analysis, and rewrite rules for names, descriptions, hierarchy, and recall-then-rerank routing.
 - 0.1.2 - Add artifact quality review, including mandatory canvas contract checks for image-generation skills.
 - 0.1.1 - Add `Streaming Confirmation Mode` so skill creation and revision must ask scoped questions one by one, summarize confirmed decisions, and wait for final approval before writing.
 - 0.1.0 - Initial local release as a skill-for-skills reviewer and pattern harvester.
