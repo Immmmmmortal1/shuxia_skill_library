@@ -26,3 +26,27 @@ This project follows a simple changelog style focused on meaningful repository e
 
 - Turn the repository into a reusable system for studying, reviewing, and improving agent skills
 - Help people build skills with stronger boundaries, constraints, outputs, and fallback behavior
+
+## 2026-07-02
+
+### Added
+
+- Added `PAT-014 Mode Split For Asset Pipelines` to capture a reusable boundary pattern for image and template workflows that must separate `reference-only` URL retrieval from `replaceable` local-template composition
+- Added `PAT-016 Streaming Confirmation Gate` to require one-by-one decision confirmation before drafting or revising a skill
+
+### Changed
+
+- Updated `SKILL.md` so skill creation and revision now use a superpower-style `Streaming Confirmation Mode`: ask one scoped question at a time, summarize confirmed decisions, and wait for final approval before writing
+
+## 2026-07-03
+
+### Added
+
+- Added `research-hot-skills-2026-07-03.md` with current ClawHub and GitHub skill ecosystem findings
+- Added `PAT-032 Portable Provenance Frontmatter` for source/ref/tree identity that travels with installed skills
+- Added `PAT-033 Evidence-Backed Skill Lifecycle Split` for separating mining, personalization, and publication workflows
+- Added `PAT-034 Typed Shared-State Contract` for memory graphs and cross-skill state handoffs
+
+### Changed
+
+- Fixed duplicate pattern IDs in `skill-patterns.md` and updated 2026-07-02 research references to the corrected IDs

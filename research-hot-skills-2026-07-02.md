@@ -54,7 +54,7 @@ Public skill marketplaces need a local supply-chain protocol. Registry heat, sta
 
 Pattern extracted:
 
-- `PAT-025 Skill Supply-Chain Trust Ladder`
+- `PAT-029 Skill Supply-Chain Trust Ladder`
 
 ### ClawHub: `Self-Improving + Proactive Agent`
 
@@ -70,7 +70,7 @@ Persistent state needs load policy. Memory quality is not only about writing fac
 
 Pattern extracted:
 
-- `PAT-026 Memory Temperature Tiers`
+- `PAT-030 Memory Temperature Tiers`
 
 ### GitHub: `mattpocock/skills`
 
@@ -89,9 +89,9 @@ Reusable lessons:
 
 Patterns extracted:
 
-- `PAT-023 Invocation Class Split`
-- `PAT-024 Red-Capable Feedback Gate`
-- `PAT-027 Context Load Budget`
+- `PAT-027 Invocation Class Split`
+- `PAT-028 Red-Capable Feedback Gate`
+- `PAT-031 Context Load Budget`
 
 ### GitHub: `master-brain`
 
@@ -139,11 +139,11 @@ These checks are worth adding to reviews before increasing skill length. The hig
 
 - Updated `skill-patterns.md`:
   - renumbered duplicate PAT entries so pattern IDs are stable
-  - added `PAT-023 Invocation Class Split`
-  - added `PAT-024 Red-Capable Feedback Gate`
-  - added `PAT-025 Skill Supply-Chain Trust Ladder`
-  - added `PAT-026 Memory Temperature Tiers`
-  - added `PAT-027 Context Load Budget`
+  - added `PAT-027 Invocation Class Split`
+  - added `PAT-028 Red-Capable Feedback Gate`
+  - added `PAT-029 Skill Supply-Chain Trust Ladder`
+  - added `PAT-030 Memory Temperature Tiers`
+  - added `PAT-031 Context Load Budget`
 - Added this dated research note because today's findings add multiple reusable mechanisms beyond the 2026-07-01 market scan.
 
 ---

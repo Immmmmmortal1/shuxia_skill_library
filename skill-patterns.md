@@ -219,12 +219,67 @@ Reduces ambiguity and keeps the agent on rails.
 - generate last
 - use master router only when sub-skill boundaries are clear
 
+---
+
+## [PAT-014] Mode Split For Asset Pipelines
+
+**Definition**
+Separate `reference retrieval` from `replaceable template composition` when the evidence requirements are different.
+
+**Why it works**
+Many image workflows overpromise by treating raw public screenshots as if they were editable local templates. Splitting modes prevents fake geometry inference and keeps the agent honest about what is directly composable.
+
+**How to encode**
+- add two named modes with different entry conditions
+- make URL-only mode reference-only
+- make composition mode require local slot metadata or masks
+- refuse replacement when metadata is missing
+
 **Example source**
-- `awesome-gamedev-agent-skills`: master router concept
+- `market-reference-pack-generator`: Google Play links are enough for inspiration, but direct screenshot replacement requires local `pack.json` slot metadata
 
 ---
 
-## [PAT-014] Persistent State
+## [PAT-015] Passthrough Default For Replacement Tasks
+
+**Definition**
+When the user asks to replace, overwrite, swap, or export assets, the default path should be a literal passthrough or direct replacement flow, not a redesigned composition flow.
+
+**Why it works**
+Users often mean “do the simple mechanical thing” when they say “替换截图”. If the skill defaults to templates, framing, or layout generation, it silently upgrades the task into design work and breaks trust.
+
+**How to encode**
+- classify `replace`, `overwrite`, `swap`, `覆盖`, `直接替换` into a deterministic passthrough mode
+- require an explicit named template pack before any composition mode is allowed
+- forbid decorative additions in passthrough mode
+- add a separate output contract for passthrough results
+
+**Example source**
+- `market-reference-pack-generator`: screenshot replacement should default to direct export unless the user explicitly selects a local template pack
+
+---
+
+## [PAT-016] Streaming Confirmation Gate
+
+**Definition**
+When a creation or revision task has unresolved product decisions, the skill must ask one confirmation question at a time and must not start writing until the user approves the confirmed summary.
+
+**Why it works**
+Many skill failures come from drafting too early. A streaming confirmation gate prevents silent assumption drift and turns vague intent into approved structure before edits begin.
+
+**How to encode**
+- detect unresolved decisions before writing
+- ask one short question at a time
+- restate each confirmed answer
+- produce a confirmation summary
+- require one final approval before patching the skill
+
+**Example source**
+- `shuxia-skill-library`: skill creation should behave like a superpower-style guided confirmation flow instead of a one-shot draft
+
+---
+
+## [PAT-017] Persistent State
 
 **Definition**
 Long-running workflows should store durable state outside model memory.
@@ -242,7 +297,28 @@ Prevents context loss and makes multi-step work auditable.
 
 ---
 
-## [PAT-015] Cross-Platform, Same Semantics
+## [PAT-018] Canvas Contract For Generated Images
+
+**Definition**
+Image-generation or image-composition skills must declare exact output canvas sizes and enforce them in tooling before reporting success.
+
+**Why it works**
+Without a hard canvas contract, low-resolution thumbnails or reference images can be accidentally promoted into final templates. This creates technically invalid assets even when the visual composition appears to work.
+
+**How to encode**
+- add a `Canvas Contract` section to the skill
+- require `pack.json` or equivalent metadata to declare `canvas.width` and `canvas.height`
+- validate every template image against the declared canvas before composition
+- validate every output image against the declared canvas before success
+- reject thumbnail-sized templates instead of upscaling or silently generating small outputs
+
+**Example source**
+- `vvcat-ui-appstore-standard-market`: iOS must be `1284 x 2778`; Android must be `1242 x 2208`
+- `market-reference-pack-generator`: Google Play default pack must generate `1242 x 2208` outputs and reject low-resolution templates
+
+---
+
+## [PAT-019] Cross-Platform, Same Semantics
 
 **Definition**
 A strong skill may be portable across agent runtimes, but its core semantics must remain stable.
@@ -259,7 +335,7 @@ Portability is valuable only if the behavior contract survives migration.
 
 ---
 
-## [PAT-016] Legal Blocked Exit
+## [PAT-020] Legal Blocked Exit
 
 **Definition**
 Separate “completed successfully” from “stopped safely because a required external condition is unavailable.”
@@ -277,7 +353,7 @@ Without a legal blocked exit, agents either falsely claim completion or leave wo
 
 ---
 
-## [PAT-017] Evidence Packet Levels
+## [PAT-021] Evidence Packet Levels
 
 **Definition**
 Review evidence should be structured by review target instead of using one oversized packet for every call.
@@ -295,7 +371,7 @@ Prevents summary-only reviews while avoiding unnecessary overhead for every smal
 
 ---
 
-## [PAT-018] Ownership Count Split
+## [PAT-022] Ownership Count Split
 
 **Definition**
 Element inventory should count app-owned UI separately from system UI, background context, and decorative assets.
@@ -315,7 +391,7 @@ Prevents agents from treating keyboards, background screenshots, or decorative c
 
 ---
 
-## [PAT-019] Failure-Mode-First
+## [PAT-023] Failure-Mode-First
 
 **Definition**
 Start by naming the most common ways a skill is likely to go wrong, then write constraints against those failure modes.
@@ -333,7 +409,7 @@ Many weak skills only describe desired behavior. Stronger skills also defend aga
 
 ---
 
-## [PAT-020] Surgical Scope
+## [PAT-024] Surgical Scope
 
 **Definition**
 Every change or action should be traceable to the user's goal, with no opportunistic expansion.
@@ -351,7 +427,7 @@ Agents frequently drift by “improving nearby things.” This pattern keeps wor
 
 ---
 
-## [PAT-021] Success-Criteria-Driven Execution
+## [PAT-025] Success-Criteria-Driven Execution
 
 **Definition**
 Do not only tell the agent what to do. Define what counts as success.
@@ -369,7 +445,7 @@ Success criteria reduce ambiguity and align execution toward verifiable outcomes
 
 ---
 
-## [PAT-022] Assumption Exposure
+## [PAT-026] Assumption Exposure
 
 **Definition**
 When multiple interpretations or hidden assumptions exist, the agent must surface them instead of silently picking one.
@@ -430,7 +506,7 @@ From ClawHub and GitHub hot skills sampled on 2026-07-01, strong skills repeated
 
 ---
 
-## [PAT-023] Invocation Class Split
+## [PAT-027] Invocation Class Split
 
 **Definition**
 Separate skills by who is allowed to invoke them: explicit user commands orchestrate, model-invoked skills carry reusable discipline.
@@ -449,7 +525,7 @@ It reduces accidental workflow recursion while keeping repeatable sub-discipline
 
 ---
 
-## [PAT-024] Red-Capable Feedback Gate
+## [PAT-028] Red-Capable Feedback Gate
 
 **Definition**
 Before diagnosing or fixing, require one runnable feedback loop that can fail on the exact target symptom.
@@ -468,7 +544,7 @@ It blocks conclusion-first debugging and turns "I think this is fixed" into an o
 
 ---
 
-## [PAT-025] Skill Supply-Chain Trust Ladder
+## [PAT-029] Skill Supply-Chain Trust Ladder
 
 **Definition**
 Unknown skills must pass source, code, permission, and risk checks before installation or execution.
@@ -488,7 +564,7 @@ Public skill registries are executable instruction supply chains. Popularity and
 
 ---
 
-## [PAT-026] Memory Temperature Tiers
+## [PAT-030] Memory Temperature Tiers
 
 **Definition**
 Persistent agent memory should be tiered by load frequency and stability instead of kept in one ever-growing file.
@@ -508,7 +584,7 @@ Hot memory stays small and always useful, while project/domain/archive tiers kee
 
 ---
 
-## [PAT-027] Context Load Budget
+## [PAT-031] Context Load Budget
 
 **Definition**
 Treat every always-visible description and rule as a cost; keep only text that changes invocation or execution behavior.
@@ -525,3 +601,61 @@ Skills degrade when trigger prose, reference material, and stale advice accumula
 
 **Example source**
 - `mattpocock/skills` `writing-great-skills`: context load, information hierarchy, no-op pruning, and progressive disclosure.
+
+---
+
+## [PAT-032] Portable Provenance Frontmatter
+
+**Definition**
+Installed skills should carry source, ref, and content identity metadata inside the skill package itself.
+
+**Why it works**
+Agent skills are copied between hosts, projects, and user directories. If provenance only lives in an installer cache, the safety context disappears when the skill is moved. Portable provenance lets update checks, audits, and pinning survive relocation.
+
+**How to encode**
+- add repository, ref/tag/commit, and source directory metadata to skill frontmatter
+- record a content hash or git tree SHA for the installed skill directory
+- support pinned installs that require explicit upgrade
+- make update flows compare content identity, not only version text
+
+**Example source**
+- GitHub CLI `gh skill`: install/update stores repository provenance and tree SHA in skill frontmatter, supports tag/commit pinning, and compares installed content to upstream changes.
+
+---
+
+## [PAT-033] Evidence-Backed Skill Lifecycle Split
+
+**Definition**
+Separate mining repeated workflows, personalizing local skills, and generalizing public skills into different modes or skills.
+
+**Why it works**
+The evidence needed to discover a skill is not the same as the evidence needed to adapt it to one user or publish it safely. Splitting the lifecycle prevents private shortcuts from leaking into public artifacts and keeps local optimization grounded in real usage.
+
+**How to encode**
+- define separate `mine`, `personalize`, and `generalize` modes
+- require session/history evidence before proposing a new skill
+- preserve local defaults only in personalization mode
+- require privacy stripping, portable examples, install claims, and README checks before publishing
+
+**Example source**
+- `hqhq1025/skill-optimizer`: splits `skill-miner`, `skill-personalizer`, and `skill-generalizer` with evidence-backed mining, inward fit, and outward publication boundaries.
+
+---
+
+## [PAT-034] Typed Shared-State Contract
+
+**Definition**
+When skills share memory or workflow state, declare the typed entities, read/write permissions, preconditions, and postconditions for each participating skill.
+
+**Why it works**
+Shared state becomes unreliable when every skill writes free-form notes. A typed contract turns memory into a validated interface: cross-skill handoffs can be checked before mutation, secrets can be represented by references, and failed constraints can block unsafe writes.
+
+**How to encode**
+- define entity and relation types with required fields and enum constraints
+- force append/merge rather than overwrite for durable graph state
+- declare per-skill reads, writes, preconditions, and postconditions
+- validate constraints before committing mutations
+- use `secret_ref` style indirection instead of storing credentials directly
+
+**Example source**
+- ClawHub `ontology`: typed graph memory with append-only storage, schema validation, relation constraints, and a per-skill ontology contract.
