@@ -733,3 +733,65 @@ Shared state becomes unreliable when every skill writes free-form notes. A typed
 
 **Example source**
 - ClawHub `ontology`: typed graph memory with append-only storage, schema validation, relation constraints, and a per-skill ontology contract.
+
+---
+
+## [PAT-035] Protected Span Fence
+
+**Definition**
+Before rewriting or transforming user content, identify spans that must not drift: versions, commands, paths, errors, quoted text, numbers, dates, identifiers, citations, and other anchored facts.
+
+**Why it works**
+Many useful agent transformations are stylistic or structural, but trust breaks when facts shift. A protected-span fence lets the agent improve the surrounding artifact while keeping factual anchors stable.
+
+**How to encode**
+- run protected-span detection before any rewrite
+- state which span classes are protected
+- prefer the smallest edit that solves the stated problem
+- forbid inventing facts, sources, or attitude to make the output smoother
+- add a final residue pass that checks protected spans did not change
+
+**Example source**
+- ClawHub `humanize-text-skill`: every mode fences protected spans before detecting or rewriting AI-shaped prose.
+
+---
+
+## [PAT-036] Per-Task Evidence Ledger
+
+**Definition**
+Long-running repair or quality workflows should create an isolated evidence ledger for each task, plus a structured append-only index for aggregate review.
+
+**Why it works**
+Agent work becomes auditable when root cause, tests, regression logs, screenshots, and closure data live with the task instead of being scattered through chat. A central append-only index then supports recurrence detection without overwriting per-task evidence.
+
+**How to encode**
+- create a deterministic task id before edits
+- isolate evidence under `tasks/{task_id}/` or `bugs/{bug_id}/`
+- require root-cause and test-result artifacts before closure
+- append structured closure records to an ndjson log
+- use atomic writes for shared state and logs
+- trigger recurrence or refactor alerts from the structured index
+
+**Example source**
+- ClawHub `zero-cover-mode`: per-bug directories, root-cause files, regression logs, ndjson closure records, session registration, atomic writes, and recurrence alerts.
+
+---
+
+## [PAT-037] Fragile Operation Script Gate
+
+**Definition**
+When a skill depends on brittle parsing, conversion, validation, or metadata normalization, move the fragile step into a tiny script and require the agent to run the script or validation corpus before claiming success.
+
+**Why it works**
+Some tasks are precision operations where natural-language compliance is too weak. Scripts provide deterministic stdout/stderr gates, and conversion corpora expose edge cases that prompt rules miss.
+
+**How to encode**
+- identify regex-heavy, parser-heavy, or repetitive boilerplate steps
+- ship a single-purpose script under `scripts/` or `lib/`
+- require validation before proceeding or before final output
+- publish corpus/pass-count evidence when the skill is updated
+- make failure self-correcting: read stderr, fix inputs or metadata, rerun
+
+**Example sources**
+- ClawHub `sql-splitter`: changelog reports all 312 procedure conversions passing after regex and DDL/DML conversion fixes.
+- `mgechev/skills-best-practices` `skill-creator`: validates metadata with a script before drafting the rest of the skill.
