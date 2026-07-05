@@ -795,3 +795,43 @@ Some tasks are precision operations where natural-language compliance is too wea
 **Example sources**
 - ClawHub `sql-splitter`: changelog reports all 312 procedure conversions passing after regex and DDL/DML conversion fixes.
 - `mgechev/skills-best-practices` `skill-creator`: validates metadata with a script before drafting the rest of the skill.
+
+---
+
+## [PAT-038] Machine-Readable Discovery Manifest
+
+**Definition**
+Large skill libraries should expose a typed discovery manifest and, when possible, a separate quality/risk score schema instead of relying on README prose alone.
+
+**Why it works**
+Once a library grows past a small curated set, human-readable lists stop being a reliable routing interface. A manifest lets installers, search tools, review bots, and cross-agent adapters reason about path, category, description, risk, source, date added, and target platforms without scraping free-form markdown.
+
+**How to encode**
+- publish an index file with stable ids, paths, categories, descriptions, source, date, and risk fields
+- validate the index with JSON Schema or an equivalent typed contract
+- keep quality/risk scores informational unless the blocking policy is explicitly documented
+- separate discovery metadata from the skill body so routing can happen before context loading
+- include compatibility or plugin target metadata for cross-agent installs
+
+**Example source**
+- `sickn33/antigravity-awesome-skills`: `skills_index.json` covers 1,898 skills, and `schemas/skills-index.v1.schema.json` plus `schemas/skill-score.v1.schema.json` make discovery and scoring machine-checkable.
+
+---
+
+## [PAT-039] Typed Mandatory Artifact Gate
+
+**Definition**
+If a skill requires a mandatory artifact before completion, bind that requirement to the task type and acceptance criteria, not to every invocation of the skill.
+
+**Why it works**
+Mandatory artifacts are useful when they prove the work is complete, but they become slop when applied universally. A literature review may need a PRISMA diagram for a systematic review, while a short scoping memo may only need verified citations and a search ledger. Typed gates preserve rigor without forcing decorative or irrelevant output.
+
+**How to encode**
+- classify task subtype before applying artifact requirements
+- state which subtypes require which artifacts
+- define a fallback when the artifact tool or evidence is unavailable
+- let the output contract explain why an artifact was included or intentionally omitted
+- avoid upgrading optional enhancements into global completion blockers
+
+**Example source**
+- `K-Dense-AI/scientific-agent-skills` `literature-review`: strong multi-phase search, screening, quality assessment, and citation verification workflow, but its unconditional figure requirement shows why mandatory artifact gates should be subtype-bound.
