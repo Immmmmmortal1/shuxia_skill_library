@@ -835,3 +835,86 @@ Mandatory artifacts are useful when they prove the work is complete, but they be
 
 **Example source**
 - `K-Dense-AI/scientific-agent-skills` `literature-review`: strong multi-phase search, screening, quality assessment, and citation verification workflow, but its unconditional figure requirement shows why mandatory artifact gates should be subtype-bound.
+
+---
+
+## [PAT-040] Scoped External Tool Session
+
+**Definition**
+When a skill enables or drives an external tool mode, every run must have an explicit session boundary: prerequisite check, mode entry, per-call trace identifier, normal cleanup, and failure cleanup.
+
+**Why it works**
+External CLIs often mutate state outside the agent transcript. Session boundaries prevent leaked modes, make logs attributable, and reduce blast radius when a command fails halfway through a workflow.
+
+**How to encode**
+- check tool version and required plugins before the first call
+- generate a session id once per skill run
+- attach the session id or User-Agent to every external call when supported
+- define cleanup in every exit path, including errors and user cancellation
+- state which tool modes are temporary and must not remain enabled after the skill finishes
+
+**Example source**
+- ClawHub `alibabacloud-waf-checkresponse-intercept-query`: requires Aliyun CLI AI-Mode at workflow entry/exit and unique session-id User-Agent handling for traceability.
+
+---
+
+## [PAT-041] Async Operation Wait Contract
+
+**Definition**
+Skills that wrap asynchronous services should define a deterministic completion contract: submit, poll cadence, progress reporting, timeout, terminal success, terminal failure, and structured output.
+
+**Why it works**
+Async APIs fail badly under vague instructions. Agents either block indefinitely, report too early, or lose error context. A wait contract makes pending state observable and completion auditable.
+
+**How to encode**
+- separate submit and poll steps
+- specify poll interval and maximum wait
+- surface concise progress while waiting
+- enumerate terminal states and error classes
+- require raw task id, status, and result payload in the final evidence when available
+- define fallback behavior for timeout or API-key failure
+
+**Example source**
+- ClawHub `kimi-websearch`: async search submission, 5-second polling, progress feedback, timeout, API-key error, submission failure, task failure, and structured JSON output.
+
+---
+
+## [PAT-042] Precompiled Doc Skill With Freshness Gate
+
+**Definition**
+Documentation-derived skills should precompile stable decisions, categories, and routing indexes locally, then fetch canonical docs only for volatile details or user-specific implementation questions.
+
+**Why it works**
+Raw RAG forces the agent to reinterpret large docs every run. A precompiled skill gives the agent a stable decision surface while a freshness gate prevents stale generated guidance from pretending to be current.
+
+**How to encode**
+- include a category index or task map in `SKILL.md`
+- distinguish local quick-reference guidance from remote authoritative documentation
+- declare required fetch tools and fallback fetch path
+- add `generated_at`, source version, or equivalent freshness metadata
+- require an update suggestion or remote lookup when the local snapshot is stale
+- include cross-skill exclusions in the description to avoid neighboring-service collisions
+
+**Example source**
+- `MicrosoftDocs/Agent-Skills` `azure-functions`: generated Azure skill with category index, official Learn links, network/tool requirement, generated-at metadata, and neighboring-service exclusions.
+
+---
+
+## [PAT-043] Phase Ownership Boundary
+
+**Definition**
+In a multi-phase workflow, each phase skill should own one phase's artifact and explicitly refuse neighboring phase work, even when that shortcut feels convenient.
+
+**Why it works**
+Workflow drift usually starts when a proposal skill designs, a design skill implements, or an implementation skill silently edits upstream specs. Phase ownership keeps artifacts reviewable and makes gaps visible at the right level.
+
+**How to encode**
+- name the phase and artifact the skill owns
+- list upstream inputs and downstream outputs
+- forbid source types that belong to neighboring phases
+- define escalation when a gap is discovered outside the current phase
+- gate phase completion with the phase's own acceptance checks
+- avoid editing upstream artifacts from downstream implementation skills
+
+**Example source**
+- `sudokar/openspec-plus`: proposal forbids source-code reading and implementation detail; apply takes over only implementation loop, reviews spec compliance before code quality, and escalates spec/design gaps instead of editing them.

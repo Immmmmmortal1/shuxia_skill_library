@@ -50,3 +50,13 @@ This project follows a simple changelog style focused on meaningful repository e
 ### Changed
 
 - Fixed duplicate pattern IDs in `skill-patterns.md` and updated 2026-07-02 research references to the corrected IDs
+
+## 2026-07-06
+
+### Added
+
+- Added `research-hot-skills-2026-07-06.md` with current ClawHub active-update and GitHub skill-library findings
+- Added `PAT-040 Scoped External Tool Session`
+- Added `PAT-041 Async Operation Wait Contract`
+- Added `PAT-042 Precompiled Doc Skill With Freshness Gate`
+- Added `PAT-043 Phase Ownership Boundary`
