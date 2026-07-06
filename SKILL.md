@@ -2,7 +2,7 @@
 name: shuxia-skill-library
 description: Use when creating, reviewing, or refining an agent skill and the goal is to make the skill more obedient, better bounded, and harder to misuse. Especially useful when extracting reusable ideas from strong external skills, turning them into boundary rules, constraint patterns, review checklists, and concrete revisions for local skills.
 metadata:
-  version: 0.1.4
+  version: 0.1.5
 ---
 
 # Shuxia Skill Library
@@ -46,6 +46,11 @@ Do not use when:
 - the task is only to copy a skill verbatim
 - the problem should be solved by code enforcement or tooling instead of documentation
 - the user already provided a final approved spec and explicitly asked to skip confirmation
+
+## Adjacent Skills
+
+- `memhub-skill-creator`: use when the primary goal is to create, package, validate, or publish a MemHub-ready skill rather than review or refine skill boundaries
+- `self-improvement`: use when the primary goal is to record mistakes, corrections, workflow lessons, or long-term improvement items rather than actively redesign a skill
 
 ## Core Principle
 
@@ -394,10 +399,11 @@ Each good external skill should leave behind reusable boundary patterns so futur
 
 ## Version
 
-Current version: 0.1.4
+Current version: 0.1.5
 
 ## Version History
 
+- 0.1.5 - Add adjacent-skill routing split against MemHub skill publishing and self-improvement logging so the skill routes more clearly as a review/refine skill-for-skills.
 - 0.1.4 - Fix skill-review output to default to a section-based module review: current sections, how to change them, what to add, and why each change matters.
 - 0.1.3 - Add routing discoverability review, scale-aware skill hit-rate analysis, and rewrite rules for names, descriptions, hierarchy, and recall-then-rerank routing.
 - 0.1.2 - Add artifact quality review, including mandatory canvas contract checks for image-generation skills.
