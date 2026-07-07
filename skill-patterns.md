@@ -918,3 +918,189 @@ Workflow drift usually starts when a proposal skill designs, a design skill impl
 
 **Example source**
 - `sudokar/openspec-plus`: proposal forbids source-code reading and implementation detail; apply takes over only implementation loop, reviews spec compliance before code quality, and escalates spec/design gaps instead of editing them.
+
+---
+
+## [PAT-044] Registry Risk Signal
+
+**Definition**
+When a skill is discovered through a registry or public index, preserve visible risk, audit, provenance, and requirement signals before installation or execution.
+
+**Why it works**
+Skill popularity is not a trust signal. Public registries may expose security status, suspicious labels, install commands, external runtime requirements, and audit links. Carrying those signals into the agent workflow prevents a high-download skill from being treated as automatically safe.
+
+**How to encode**
+- read registry risk/audit fields before recommending installation
+- show security status and runtime requirements near the install step
+- require extra confirmation for suspicious, unaudited, or code-executing skills
+- distinguish registry metadata from the skill author's own claims
+- keep provenance links in the research or install summary
+
+**Example source**
+- ClawSkills `cad-agent`: visible OpenClaw `Suspicious` status appears next to install commands, Docker requirement, and VirusTotal status.
+
+---
+
+## [PAT-045] Visual Feedback Loop
+
+**Definition**
+For skills that generate spatial, visual, or physical-world artifacts, make an inspectable render part of the work loop before export or completion.
+
+**Why it works**
+Code may compile while the artifact is visually wrong. Visual domains such as CAD, UI, animation, charts, slides, and image generation need a feedback artifact that the agent can inspect and revise against before declaring success.
+
+**How to encode**
+- generate a render, screenshot, preview, or multi-view image before final export
+- inspect the render against the requested geometry, layout, or composition
+- iterate from observed render defects, not only code errors
+- export final artifacts only after the visual check passes
+- keep the render path in final evidence when useful
+
+**Example source**
+- ClawSkills `cad-agent`: model creation and modification are followed by PNG render inspection before STL/STEP export.
+
+---
+
+## [PAT-046] Capability Hub With Built-In Subskills
+
+**Definition**
+A broad domain skill should act as a routing hub that loads only the relevant methodology, harness reference, and sub-skill for the current task.
+
+**Why it works**
+Broad skills become unusable when every mode, edge case, and platform instruction loads at once. A hub-and-spoke design keeps trigger recall broad while execution remains narrow, ordered, and token-efficient.
+
+**How to encode**
+- keep the top-level skill as an orchestrator, not the whole handbook
+- load core methodology first
+- detect the runtime or harness and load its reference once
+- load exactly the sub-skill or built-in guide matching the task type
+- move deep mode detail into `built-in-skills/`, `references/`, `agents/`, or `starter-components/`
+
+**Example source**
+- `JimLiu/baoyu-design`: top-level design skill routes to harness references, design methodology, and task-specific built-in skills for decks, prototypes, design systems, import/export, and media.
+
+---
+
+## [PAT-047] Read-Only Validator Role
+
+**Definition**
+Validation subagents or validation modes should be explicitly read-only unless the caller has invoked a separate fixing step.
+
+**Why it works**
+Validators are more trustworthy when they cannot mutate the artifact they judge. Separating "report" from "repair" prevents validation from hiding failures by quietly editing files, and makes the main agent own the actual fix.
+
+**How to encode**
+- state that the validator must not create, edit, delete, compile, or serve files
+- allow only inspection commands and validation scripts
+- require stdout or structured report to be relayed without summarizing away details
+- return a small health verdict after the raw validation report
+- make repair a separate explicit workflow owned by the main agent
+
+**Example source**
+- `JimLiu/baoyu-design` `design-system-checker`: read-only validator that runs the checker script, relays stdout, and reports a clean/issues verdict without modifying files.
+
+---
+
+## [PAT-048] Claim-Type Guard Split
+
+**Definition**
+Split review skills by the kind of claim being checked: production code behavior, documentation truth, tests, security, domain compliance, or generated artifact quality.
+
+**Why it works**
+Different claims need different evidence. Documentation accuracy is checked against source symbols and CLI help; production code quality is checked against diffs, contracts, error handling, and maintainability; tests need failure-mode coverage. A generic review skill tends to blur these surfaces and either overreach or miss domain-specific failures.
+
+**How to encode**
+- define one guard per claim type or domain
+- put exclusions in the frontmatter description to prevent cross-guard collisions
+- provide separate guard-pass, live, and review modes when useful
+- require the evidence source appropriate to the claim type
+- keep shared principles in references, but keep trigger surfaces distinct
+
+**Example source**
+- `amElnagdy/guard-skills`: separates `clean-code-guard`, `docs-guard`, `test-guard`, `wp-guard`, and `woo-guard`, with claim-specific rules and exclusions.
+
+---
+
+## [PAT-049] Promotion Rule For Persistent Learning
+
+**Definition**
+Do not turn a session observation into a durable skill or memory unless it passes a promotion rule: verified check, named failure pattern, and ruled-out dead end.
+
+**Why it works**
+Self-learning systems fail when they persist confident guesses. Promotion criteria keep the skill library from accumulating one-off notes, unverified folklore, or duplicated workflows that later trigger in the wrong context.
+
+**How to encode**
+- require a passing test, successful command, reproduced fix, or other concrete check
+- name the failure pattern the new knowledge avoids
+- record at least one dead end that was tried and eliminated
+- route one-line facts to memory, multi-step reusable workflows to skills, and one-off discoveries to skip
+- dedupe against existing skills and memory before writing
+- prohibit secret values; store only where to find them
+
+**Example source**
+- `Kulaxyz/self-learning-skills`: requires a passing check, named failure pattern, and ruled-out dead end before harvesting a new skill.
+
+---
+
+## [PAT-050] Local Control Plane Artifact
+
+**Definition**
+External-platform skills should create a local, resumable control plane containing payloads, IDs, scripts, evals, status, and next directions.
+
+**Why it works**
+When a skill launches, configures, or deploys something outside the chat, the transcript is not enough operational state. A local control plane makes the work resumable, reviewable, shareable, and auditable after the session ends.
+
+**How to encode**
+- create one deterministic working folder
+- write source-of-truth config plus projected API payloads
+- save external object IDs as soon as they are created
+- include resumable launch or update scripts
+- include eval cases or verification artifacts
+- maintain a status artifact such as an overview page, dashboard, or run report
+- keep credentials out of chat and in a gitignored/env/vault location
+
+**Example source**
+- `anthropics/launch-your-agent`: writes `my-agent/` with build sheet, payloads, scripts, evals, `.env`, IDs, overview page, and next-direction plan for a Managed Agent launch.
+
+---
+
+## [PAT-051] Calibrated Process Intensity
+
+**Definition**
+Heavy execution loops should define when to run fully, when to run lightly, and when to escalate instead of adding more process.
+
+**Why it works**
+The same checklist can be overkill for simple work and insufficient for work beyond the current model or context. Calibrating intensity prevents ceremony from replacing judgment, while still enforcing verification where the model is likely to skip it.
+
+**How to encode**
+- name objective trigger thresholds such as multi-file, multi-source, or multi-session work
+- define when not to use the loop
+- vary verification strictness by model/runtime capability when known
+- cap replans or repeated loops
+- require every stage to produce a verifiable artifact or merge it into another stage
+- escalate when synthesis or requirements ambiguity exceeds what checks can compensate for
+
+**Example source**
+- `mrtooher/fable-mode`: calibrates the staged loop by model tier, caps replans, and requires failable checks while admitting that process cannot raise the model's reasoning ceiling.
+
+---
+
+## [PAT-052] Human-Signed Edit Boundary
+
+**Definition**
+For high-stakes or user-owned content, separate issue discovery from content mutation and require explicit authorization before applying edits.
+
+**Why it works**
+Review findings, rewrite suggestions, and applied changes have different authority levels. Human sign-off prevents an agent from silently converting a critique into source mutation, especially for papers, legal documents, customer-facing materials, and production policies.
+
+**How to encode**
+- resolve the working artifact and owner at runtime
+- discover or review issues into a durable ledger first
+- assign each actionable issue a close criterion
+- show patches or proposed edits before applying them
+- require explicit author approval, or an up-front bounded policy for unattended mode
+- keep revision logs, self-checks, and back-translations outside the edited artifact
+- log overrides and unresolved disagreements
+
+**Example source**
+- `u7079256/paperjury`: review and auto modes use a durable ledger, close criteria, reviewer isolation, and author sign-off before manuscript edits are applied.

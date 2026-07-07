@@ -60,3 +60,18 @@ This project follows a simple changelog style focused on meaningful repository e
 - Added `PAT-041 Async Operation Wait Contract`
 - Added `PAT-042 Precompiled Doc Skill With Freshness Gate`
 - Added `PAT-043 Phase Ownership Boundary`
+
+## 2026-07-07
+
+### Added
+
+- Added `research-hot-skills-2026-07-07.md` with current ClawSkills, Skills.sh, and GitHub high-momentum skill findings
+- Added `PAT-044 Registry Risk Signal`
+- Added `PAT-045 Visual Feedback Loop`
+- Added `PAT-046 Capability Hub With Built-In Subskills`
+- Added `PAT-047 Read-Only Validator Role`
+- Added `PAT-048 Claim-Type Guard Split`
+- Added `PAT-049 Promotion Rule For Persistent Learning`
+- Added `PAT-050 Local Control Plane Artifact`
+- Added `PAT-051 Calibrated Process Intensity`
+- Added `PAT-052 Human-Signed Edit Boundary`
