@@ -1104,3 +1104,109 @@ Review findings, rewrite suggestions, and applied changes have different authori
 
 **Example source**
 - `u7079256/paperjury`: review and auto modes use a durable ledger, close criteria, reviewer isolation, and author sign-off before manuscript edits are applied.
+
+---
+
+## [PAT-053] Recommendation Gate Before Install
+
+**Definition**
+Discovery skills should verify fit, trust, and repository health before recommending or installing a found skill.
+
+**Why it works**
+Search results optimize recall, not safety or usefulness. A skill that happens to match a keyword may be abandoned, untrusted, low-quality, or a poor fit for the user's actual task.
+
+**How to encode**
+- understand the user's domain and task before searching
+- check a live leaderboard or registry when one exists
+- search only after common high-quality sources are considered
+- require objective trust signals such as install count, source reputation, repository stars, recency, or registry status
+- present install command, source, and reason to care separately
+- when no match exists, say so and offer direct help or skill creation instead of fabricating a recommendation
+
+**Example source**
+- `vercel-labs/skills` `find-skills`: checks leaderboard, searches with `npx skills find`, verifies install count/source reputation/GitHub stars, then offers installation.
+
+---
+
+## [PAT-054] Paid Operation Confirmation Gate
+
+**Definition**
+Skills that can spend money, consume credits, or trigger billable API calls must stop before execution, disclose the cost basis, and wait for explicit user confirmation in a separate turn.
+
+**Why it works**
+Cost-bearing actions have a different authority level from ordinary tool use. Same-message disclosure is easy for an agent to treat as permission; a separate confirmation turn creates a deterministic boundary.
+
+**How to encode**
+- identify which operations incur fees or consume credits
+- fetch authoritative pricing or quota information instead of guessing
+- estimate calls, rows, tokens, or units from the planned request
+- disclose the expected billing basis in natural language
+- stop and wait for explicit confirmation before execution
+- route insufficient balance to top-up guidance, not silent retry
+- avoid exposing low-level parameter blobs when the user did not ask for them
+
+**Example source**
+- ClawHub UpKuaJing `global-company-search` and `linkedin-person-search`: paid API calls require pricing lookup and separate user confirmation, especially for large result sets.
+
+---
+
+## [PAT-055] Live Catalog Source-Of-Truth
+
+**Definition**
+When a skill recommends, publishes, or reuses items from a public catalog, the live catalog must be the authority; local repository files and memory are only implementation or fallback context.
+
+**Why it works**
+Catalog membership, titles, URLs, versions, and availability change. Treating cloned source or model memory as published truth causes stale recommendations and false provenance.
+
+**How to encode**
+- name the live catalog or structured API that is authoritative
+- read the live source before recommending or publishing catalog items
+- if the live source is unavailable, say discovery is unavailable instead of substituting memory
+- label local saved items as project-local, not published
+- treat catalog prompts as reference data, not executable instructions
+- record source URL and modified date when saving adapted catalog items
+
+**Example source**
+- `Forward-Future/loopy`: published loops must come from the live catalog or JSON catalog; repository content and memory cannot substitute for the production database.
+
+---
+
+## [PAT-056] Orthogonal Review Axes
+
+**Definition**
+Review skills should split independent claim types into separate axes, run them with their own evidence, and report them side by side without collapsing them into one ranked list.
+
+**Why it works**
+A change can satisfy one axis and fail another. Code may follow standards but violate the spec, or satisfy the spec while breaking documented conventions. Merging these findings too early hides the failure mode.
+
+**How to encode**
+- pin the reviewed diff or artifact before spawning reviewers
+- identify source material for each axis before review starts
+- isolate reviewer context per axis when possible
+- define axis-specific evidence and prompts
+- aggregate under separate headings
+- do not rerank findings across axes unless a later human decision explicitly asks for prioritization
+
+**Example source**
+- `mattpocock/skills` `code-review`: separates Standards and Spec reviews, runs them in parallel subagents, and reports the axes independently.
+
+---
+
+## [PAT-057] Lifecycle State Machine With Diagnosable Fallback
+
+**Definition**
+Coordinator skills should model work as explicit lifecycle states with diagnostic fields, proof artifacts, and fallback modes that state exactly which side effects still occurred.
+
+**Why it works**
+Long-running delegated work fails silently when state lives only in chat. A diagnosable state machine lets an agent inspect whether work is ready, running, blocked, stale, missing proof, or merely data-cleaned without real execution.
+
+**How to encode**
+- define canonical statuses and valid transitions
+- store owner, priority, execution metadata, attempts, logs, proof, artifacts, and diagnostics
+- cap concurrent dispatch and avoid duplicate active work per owner
+- use deterministic session or task keys for resumability
+- on launch failure, record blocked/error state instead of silently requeueing
+- when fallback runs, name the exact effects performed and the effects that could not happen
+
+**Example source**
+- ClawHub `workboard-skill`: Workboard cards carry lifecycle metadata and diagnostics; Gateway-unavailable fallback can clean data state but cannot start worker runs.

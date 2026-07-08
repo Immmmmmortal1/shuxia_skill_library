@@ -75,3 +75,14 @@ This project follows a simple changelog style focused on meaningful repository e
 - Added `PAT-050 Local Control Plane Artifact`
 - Added `PAT-051 Calibrated Process Intensity`
 - Added `PAT-052 Human-Signed Edit Boundary`
+
+## 2026-07-08
+
+### Added
+
+- Added `research-hot-skills-2026-07-08.md` with current ClawHub active-update, Skills.sh, and GitHub high-momentum skill findings
+- Added `PAT-053 Recommendation Gate Before Install`
+- Added `PAT-054 Paid Operation Confirmation Gate`
+- Added `PAT-055 Live Catalog Source-Of-Truth`
+- Added `PAT-056 Orthogonal Review Axes`
+- Added `PAT-057 Lifecycle State Machine With Diagnosable Fallback`
