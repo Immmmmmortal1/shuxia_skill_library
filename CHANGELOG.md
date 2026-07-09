@@ -86,3 +86,14 @@ This project follows a simple changelog style focused on meaningful repository e
 - Added `PAT-055 Live Catalog Source-Of-Truth`
 - Added `PAT-056 Orthogonal Review Axes`
 - Added `PAT-057 Lifecycle State Machine With Diagnosable Fallback`
+
+## 2026-07-09
+
+### Added
+
+- Added `research-hot-skills-2026-07-09.md` with current ClawHub active-update and GitHub official/domain skill-library findings
+- Added `PAT-058 Staged Creative Locks`
+- Added `PAT-059 Routing Precedence Firewall`
+- Added `PAT-060 Governance Card Pipeline`
+- Added `PAT-061 Non-Authority Boundary`
+- Added `PAT-062 Script-First Domain Workflow`

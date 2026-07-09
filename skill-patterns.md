@@ -1210,3 +1210,103 @@ Long-running delegated work fails silently when state lives only in chat. A diag
 
 **Example source**
 - ClawHub `workboard-skill`: Workboard cards carry lifecycle metadata and diagnostics; Gateway-unavailable fallback can clean data state but cannot start worker runs.
+
+---
+
+## [PAT-058] Staged Creative Locks
+
+**Definition**
+Creative generation skills should split work into explicit lock points such as spec lock, identity lock, script lock, and per-asset execution.
+
+**Why it works**
+Media generation drifts when the agent treats creative approval as a single vague checkpoint. Separate locks prevent later stages from mutating earlier decisions without user approval.
+
+**How to encode**
+- define named states
+- require one `in_progress` task at a time
+- return rollback/rework to the matching prior state
+- wait for confirmation before moving from spec to identity, identity to script, and script to generation
+- generate one asset at a time when outputs are expensive or hard to reverse
+
+**Example source**
+- ClawHub `dlazy-image-storyboard`: strict "plan first, render later" workflow with character and script gates
+
+---
+
+## [PAT-059] Routing Precedence Firewall
+
+**Definition**
+Large operational skills should define an ordered routing precedence table that maps ambiguous user phrases to one workflow and explicitly forbids near-miss workflows.
+
+**Why it works**
+Broad trigger words like "report", "diagnosis", "analysis", "monitoring", or "keywords" can match several workflows. Precedence prevents the agent from choosing the most familiar or easiest route.
+
+**How to encode**
+- put highest-priority disambiguation in the frontmatter description and workflow
+- name the exact workflow selected by each ambiguous phrase
+- add negative route clauses such as "website diagnosis is not market analysis"
+- require reading the routing document before execution when the object is unclear
+
+**Example source**
+- ClawHub `siluzan-tso`: website diagnosis, market analysis, keyword planning, and account reports are separated by explicit precedence
+
+---
+
+## [PAT-060] Governance Card Pipeline
+
+**Definition**
+Governance documentation should be generated from source signals through a structured context object, deterministic rendering, marker cleanup, and validation.
+
+**Why it works**
+Safety and trust reviews are weak when the agent freewrites. A pipeline makes evidence, missing fields, and human-review obligations visible.
+
+**How to encode**
+- declare read/write/shell permission boundaries
+- discover source signals before reading arbitrary files
+- build a schema-validated context JSON
+- render from a fixed template
+- fail if review markers or template fragments remain
+- state that human owner/legal/safety review is still required
+
+**Example source**
+- `NVIDIA/skills` `skill-card-generator`
+
+---
+
+## [PAT-061] Non-Authority Boundary
+
+**Definition**
+Safety-adjacent skills should state what they cannot certify as clearly as what they can check.
+
+**Why it works**
+Agents often overstate the meaning of a narrow technical check. A non-authority boundary prevents a preflight, lint, or diagnostic step from being treated as clinical, legal, regulatory, or production clearance.
+
+**How to encode**
+- name the exact input/output contract
+- forbid replacing vetted upstream tools with handwritten logic
+- list non-capabilities in operational terms
+- require verifier evidence before treating output as proof
+- preserve failed evidence packs for review
+
+**Example source**
+- `NVIDIA/skills` `dicom-series-preflight`: header-only DICOM preflight, not de-identification or clinical clearance
+
+---
+
+## [PAT-062] Script-First Domain Workflow
+
+**Definition**
+Domain-library skills should default to maintained scripts for common workflows and only drop to custom code when the requested path is outside script coverage.
+
+**Why it works**
+Bundled scripts carry stable defaults, file contracts, logging, and validation behavior. Ad hoc code silently loses those guarantees.
+
+**How to encode**
+- include a script toolkit table with purpose, inputs, outputs, and typical calls
+- make scripts chain through stable artifact formats
+- state when custom code is allowed
+- route neighboring domains to neighboring skills instead of expanding scope
+- pin runtime and package constraints
+
+**Example source**
+- `K-Dense-AI/scientific-agent-skills` `scanpy`
