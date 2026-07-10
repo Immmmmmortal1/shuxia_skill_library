@@ -1310,3 +1310,106 @@ Bundled scripts carry stable defaults, file contracts, logging, and validation b
 
 **Example source**
 - `K-Dense-AI/scientific-agent-skills` `scanpy`
+
+---
+
+## [PAT-063] Anti-Rationalization Table
+
+**Definition**
+Skills should name the excuses an agent is likely to use to skip required work, then pair each excuse with a concrete counter-rule.
+
+**Why it works**
+Agents often fail by rationalizing shortcuts: tests can come later, docs are probably known, the change is too small to verify, or a result "looks right." Naming those shortcuts in advance turns vague discipline into an enforceable guardrail.
+
+**How to encode**
+- add a `Rationalizations` or `Common Excuses` section
+- list concrete shortcut phrases the agent might use
+- pair each phrase with the required action
+- connect the counter-rule to a workflow gate or verification step
+- keep the table specific to the skill's failure modes instead of generic scolding
+
+**Example source**
+- `addyosmani/agent-skills`: every skill anatomy includes rationalizations and verification; `test-driven-development` blocks bug fixes that lack a failing reproduction first.
+
+---
+
+## [PAT-064] Binary Evidence Scoring
+
+**Definition**
+Evaluation skills should decompose requirements into atomic binary checks and derive scores from located evidence, not subjective sliders.
+
+**Why it works**
+Broad grades invite evaluator drift. Binary checks make disagreement easier to inspect, and `file:line` evidence keeps scores auditable.
+
+**How to encode**
+- split each acceptance criterion into MET/UNMET checks
+- require `file:line` or equivalent evidence for every MET check
+- record the search performed before marking a check UNMET
+- score implementation and tests separately when they can fail independently
+- derive partial credit from the fraction of checks met
+
+**Example source**
+- `tech-leads-club/agent-skills` `spec-driven-eval`: checklist-based scoring with evidence-or-zero and search-before-zero rules.
+
+---
+
+## [PAT-065] Source Hierarchy With Conflict Disclosure
+
+**Definition**
+Source-backed implementation skills should define an authority order for sources and require explicit disclosure when authoritative sources conflict with local project practice.
+
+**Why it works**
+Current correctness depends on version, framework, and project context. Without a hierarchy, agents cite convenient sources; without conflict disclosure, they silently pick between "modern docs" and "existing codebase" without consent.
+
+**How to encode**
+- detect exact stack and versions before fetching references
+- rank sources such as official docs, official changelogs, web standards, and compatibility tables
+- ban tutorials, forum posts, and model memory as primary authority
+- fetch the relevant page, not a generic homepage
+- when docs and project code disagree, state the conflict and ask or justify the selected path
+- cite the source for framework-specific decisions
+
+**Example source**
+- `addyosmani/agent-skills` `source-driven-development`
+
+---
+
+## [PAT-066] Priority Rule Corpus With Progressive References
+
+**Definition**
+Domain best-practice skills should rank rule families by impact and load detailed rule examples only when the task needs them.
+
+**Why it works**
+Flat checklists make critical correctness rules compete with low-impact polish. Priority ordering guides attention, while referenced rule files preserve detailed incorrect/correct examples without bloating every invocation.
+
+**How to encode**
+- define rule categories with priority and impact labels
+- put critical categories before high, medium, and low-impact advice
+- keep the entry `SKILL.md` compact
+- move detailed explanations, wrong/right examples, metrics, and domain notes into `references/`
+- use stable rule prefixes or IDs so findings can cite the relevant rule family
+
+**Example source**
+- `supabase/agent-skills` `supabase-postgres-best-practices`: eight priority categories and referenced rule files with SQL examples and metrics.
+
+---
+
+## [PAT-067] Publisher-Side Integrity Gates
+
+**Definition**
+Skill catalogs should harden publication and installation with content identity, static scanning, path isolation, lockfiles, audit trails, and pinned installs.
+
+**Why it works**
+Consumer-side vetting is necessary but late. Publisher-side gates reduce risk before discovery and make later audits possible when a skill is copied, updated, or pinned.
+
+**How to encode**
+- require source-only packages or clearly declared binary boundaries
+- scan skills before publication
+- record content hashes or lockfile identity
+- guard path traversal and symlink behavior in installers
+- keep an audit trail of installed source, version, and content identity
+- support pinning so updates cannot silently overwrite a known-good local copy
+
+**Example source**
+- `tech-leads-club/agent-skills`: static analysis, content hashing, lockfiles, path isolation, symlink guards, audit trail, and Snyk Agent Scan before publishing.
+- `openclaw/clawhub`: registry supports versioning, changelogs, moderation, trust/capability metadata, and pinned local installs.

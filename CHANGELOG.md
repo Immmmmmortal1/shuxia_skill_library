@@ -97,3 +97,14 @@ This project follows a simple changelog style focused on meaningful repository e
 - Added `PAT-060 Governance Card Pipeline`
 - Added `PAT-061 Non-Authority Boundary`
 - Added `PAT-062 Script-First Domain Workflow`
+
+## 2026-07-10
+
+### Added
+
+- Added `research-hot-skills-2026-07-10.md` with current GitHub skill-library, ClawHub registry, and supply-chain findings
+- Added `PAT-063 Anti-Rationalization Table`
+- Added `PAT-064 Binary Evidence Scoring`
+- Added `PAT-065 Source Hierarchy With Conflict Disclosure`
+- Added `PAT-066 Priority Rule Corpus With Progressive References`
+- Added `PAT-067 Publisher-Side Integrity Gates`
