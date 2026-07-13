@@ -98,6 +98,14 @@ This project follows a simple changelog style focused on meaningful repository e
 - Added `PAT-061 Non-Authority Boundary`
 - Added `PAT-062 Script-First Domain Workflow`
 
+## 2026-07-13
+
+### Added
+
+- Added `research-hot-skills-2026-07-13.md` with current ClawHub and GitHub activity evidence
+- Added `PAT-068 Evidence-Channel Isolation`
+- Added `PAT-069 Semantic-Core Retention Across Handoffs`
+
 ## 2026-07-10
 
 ### Added

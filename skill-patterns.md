@@ -1413,3 +1413,46 @@ Consumer-side vetting is necessary but late. Publisher-side gates reduce risk be
 **Example source**
 - `tech-leads-club/agent-skills`: static analysis, content hashing, lockfiles, path isolation, symlink guards, audit trail, and Snyk Agent Scan before publishing.
 - `openclaw/clawhub`: registry supports versioning, changelogs, moderation, trust/capability metadata, and pinned local installs.
+
+---
+
+## [PAT-068] Evidence-Channel Isolation
+
+**Definition**
+Independent validators should restrict themselves to declared observable evidence channels and treat implementation access as contamination.
+
+**Why it works**
+A reviewer who can see source, diffs, tests, and implementation rationale may validate intended behavior instead of actual behavior. Channel isolation preserves independence and makes pass claims reproducible from a user's or operator's perspective.
+
+**How to encode**
+- require a behavior contract before testing
+- list allowed surfaces such as UI, CLI, API, generated artifacts, public logs, screenshots, and accessibility trees
+- list forbidden evidence such as source, diffs, private tests, git history, and implementation notes
+- define a contamination status such as `blocked_source_required`
+- use an isolated workspace with only the contract, fixtures, and redacted captures
+- run anti-cheat probes that vary data, retry, refresh, and verify persistence or real side effects
+- assign every contract clause pass, fail, blocked, or out of scope
+
+**Example source**
+- `openclaw/agent-skills` `behavior-validator`
+
+---
+
+## [PAT-069] Semantic-Core Retention Across Handoffs
+
+**Definition**
+When a skill routes neighboring infrastructure or presentation work elsewhere, it should retain ownership of the data and behavior invariants that make its own domain artifact correct.
+
+**Why it works**
+Clean scope splits can create ownership gaps. If one skill owns generic transport and another owns the domain feature, neither may preserve the exact payload, lifecycle, or compatibility contract across the boundary.
+
+**How to encode**
+- name neighboring skills and the work routed to each
+- define the local semantic core that must stay in scope
+- preserve payload shapes, lifecycle invariants, version floors, and compatibility rules in the domain skill
+- require handoff outputs to carry those invariants explicitly
+- test the seam between skills, not only each skill in isolation
+- keep trigger descriptions concrete enough to distinguish generic infrastructure from domain-specific contracts
+
+**Example source**
+- `dpearson2699/swift-ios-skills` `activitykit`: routes ordinary widgets and generic APNs setup away while retaining Live Activity payload and `content-state` invariants.
