@@ -106,6 +106,15 @@ This project follows a simple changelog style focused on meaningful repository e
 - Added `PAT-068 Evidence-Channel Isolation`
 - Added `PAT-069 Semantic-Core Retention Across Handoffs`
 
+## 2026-07-14
+
+### Added
+
+- Added `research-hot-skills-2026-07-14.md` with current ClawHub catalog signals and GitHub release evidence
+- Added `PAT-070 Absolute Confidence Floor With Honest Empty State`
+- Added `PAT-071 Persistent-State Selection And Terminality Contract`
+- Added `PAT-072 Cross-Platform Semantic Parity Manifest`
+
 ## 2026-07-10
 
 ### Added

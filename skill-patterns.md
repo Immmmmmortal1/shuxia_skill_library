@@ -1456,3 +1456,66 @@ Clean scope splits can create ownership gaps. If one skill owns generic transpor
 
 **Example source**
 - `dpearson2699/swift-ios-skills` `activitykit`: routes ordinary widgets and generic APNs setup away while retaining Live Activity payload and `content-state` invariants.
+
+---
+
+## [PAT-070] Absolute Confidence Floor With Honest Empty State
+
+**Definition**
+Ranked discovery and recommendation skills should apply an absolute evidence threshold after relative ranking and treat “nothing qualified” as a valid final outcome.
+
+**Why it works**
+A ranking algorithm always produces a first place, even when every candidate is noise. An absolute floor prevents polished weak signals from becoming false trends, recommendations, or conclusions.
+
+**How to encode**
+- separate cheap candidate nomination from deeper evidence enrichment
+- define measurable acceptance paths such as independent cross-source confirmation or an exceptional single-source spike
+- apply the floor after enrichment, not only to seed rank
+- preserve a named weak signal for diagnosis without promoting it to a result
+- define a first-class empty outcome and forbid retrying, padding, or fabricating around it
+- make shallow mode explicit and keep the same minimum floor
+
+**Example source**
+- `mvanhorn/last30days-skill` `last30days` v3.14.0 discovery mode: nominate, enrich, floor, then emit `nothing-solid` when no topic qualifies.
+
+---
+
+## [PAT-071] Persistent-State Selection And Terminality Contract
+
+**Definition**
+Persistent workflow skills should define deterministic state-selection precedence, the freshness signal used for fallback selection, and an explicit terminal marker that stops all automation.
+
+**Why it works**
+Multiple saved states create ambiguity after context loss. Progress counts alone cannot distinguish a completed-but-retained state from an active one, and container timestamps can select stale siblings.
+
+**How to encode**
+- order state resolution, for example explicit environment id, active pointer, newest scoped state, then legacy fallback
+- validate state identifiers before resolving paths
+- measure freshness on the mutable state artifact, not merely its directory
+- store terminality separately from progress percentage
+- make every nag, loop, resume hook, and recovery path stop on the terminal marker
+- test stale-sibling, closed-state, missing-pointer, and cross-session recovery cases
+
+**Example source**
+- `OthmanAdi/planning-with-files` v3.5.0: active-plan precedence, file-mtime recovery, and close-marker-aware follow-up and loop termination.
+
+---
+
+## [PAT-072] Cross-Platform Semantic Parity Manifest
+
+**Definition**
+Skills that ship across agent hosts, operating systems, or language adapters should maintain a manifest of shared semantic invariants and adapter coverage, including intentional lag.
+
+**Why it works**
+Copying similar files creates the appearance of portability while routing names, state recovery, terminal behavior, or output protocols silently diverge. A parity manifest makes semantic drift reviewable without forcing identical syntax.
+
+**How to encode**
+- declare one canonical semantic contract for routing, state, side effects, and output meaning
+- list every host, OS, and language adapter covered by the release
+- test adapter-specific syntax against the shared invariant set
+- keep protocol output parseable and platform-safe
+- record missing adapters and intentionally lagging variants explicitly
+- require namespace and command-name parity checks before release
+
+**Example source**
+- `OthmanAdi/planning-with-files` v3.5.0: a documented 17-file parity set, Windows protocol fixes, language-command namespace correction, and explicitly lagging adapters.
