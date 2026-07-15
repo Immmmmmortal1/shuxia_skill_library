@@ -6,6 +6,19 @@ This project follows a simple changelog style focused on meaningful repository e
 
 ---
 
+## 2026-07-15
+
+### Added
+
+- Added `research-hot-skills-2026-07-15.md` with current ClawHub and GitHub momentum evidence
+- Added `PAT-073 Coverage-Bearing Verdict`
+- Added `PAT-074 Negative-Space Suppression Gate`
+- Added `PAT-075 Replicated Metadata Parity Gate`
+
+### Refined
+
+- Extended local review guidance for coverage-aware verdicts, proof-based false-positive suppression, and fail-closed metadata parity across distribution surfaces
+
 ## 2026-07-01
 
 ### Added

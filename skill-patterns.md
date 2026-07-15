@@ -1519,3 +1519,66 @@ Copying similar files creates the appearance of portability while routing names,
 
 **Example source**
 - `OthmanAdi/planning-with-files` v3.5.0: a documented 17-file parity set, Windows protocol fixes, language-command namespace correction, and explicitly lagging adapters.
+
+---
+
+## [PAT-073] Coverage-Bearing Verdict
+
+**Definition**
+Evaluation, security, and compliance verdicts should carry the evidence channels used, components examined, completeness, and degraded-mode status through every output and aggregation layer.
+
+**Why it works**
+A low score or clean label is easy to over-trust after its coverage context is stripped. Preserving coverage prevents static-only, partial, failed, or fallback analysis from being mistaken for a complete assessment.
+
+**How to encode**
+- report requested analysis separately from analysis actually performed
+- include scan mode, component scope, completeness, and child errors beside the verdict
+- preserve the full per-item evidence payload in batch and recursive outputs
+- define claim-strength rules for partial and fallback modes
+- test malformed child payloads and mixed successful/failed batches
+- never convert missing coverage into an implicit clean result
+
+**Example source**
+- `NVIDIA/SkillSpector`: recursive JSON reports retain per-skill issues, components, scan metadata, and `analysis_completeness`; MCP results expose whether LLM analysis actually ran.
+
+---
+
+## [PAT-074] Negative-Space Suppression Gate
+
+**Definition**
+False-positive suppression should activate only after a narrow rule-specific gate proves that the matched content is non-executable and outside protected control artifacts.
+
+**Why it works**
+File extensions and directory names are weak proxies for safety. Documentation can contain executable snippets, structured run steps, or agent instructions, while the same words in true prose may be harmless. Proving the negative space reduces noise without creating a broad bypass.
+
+**How to encode**
+- allowlist the exact rules eligible for contextual suppression
+- identify prose or comment context at the matched line
+- reject suppression when execution signals are present
+- exclude control artifacts such as `SKILL.md` from generic documentation exemptions
+- test harmless prose and near-identical executable twins
+- keep unrecognized rules unsuppressed by default
+
+**Example source**
+- `NVIDIA/SkillSpector`: documentation filtering is rule-scoped, checks execution signals, preserves `SKILL.md` findings, and tests code, YAML run steps, comments, prose, and markdown counterexamples.
+
+---
+
+## [PAT-075] Replicated Metadata Parity Gate
+
+**Definition**
+When skill identity or version metadata is replicated across catalogs, plugin manifests, and host adapters, derive it from one canonical source and block release if any replica cannot be found, parsed, or proven equal.
+
+**Why it works**
+Metadata drift changes what users install and what routers discover even when the skill body is correct. Warning-only synchronization lets stale versions ship and makes distribution state ambiguous.
+
+**How to encode**
+- declare one canonical identity and version source
+- update distribution replicas mechanically from that source
+- test equality between canonical and embedded metadata
+- include metadata and sync-workflow changes in CI path triggers
+- fail on parse failure, missing target entries, or mismatched replicas
+- report which distribution surface is stale without silently repairing unrelated fields
+
+**Example source**
+- `Agents365-ai/drawio-skill`: version-sync CI now fails when parsing or marketplace lookup fails and regression-tests equality between top-level and embedded skill versions.
