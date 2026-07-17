@@ -6,6 +6,19 @@ This project follows a simple changelog style focused on meaningful repository e
 
 ---
 
+## 2026-07-17
+
+### Added
+
+- Added `research-hot-skills-2026-07-17.md` with current ClawHub and GitHub momentum evidence
+- Added `PAT-076 Systemic-Failure Budget Circuit Breaker`
+- Added `PAT-077 Portability Claim Proof Matrix`
+- Added `PAT-078 Portable Approval Principal Gate`
+
+### Refined
+
+- Extended local review guidance for causal retry termination, proof-bearing portability claims, and cross-channel approval identity enforcement
+
 ## 2026-07-15
 
 ### Added

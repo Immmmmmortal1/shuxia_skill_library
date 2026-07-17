@@ -1582,3 +1582,70 @@ Metadata drift changes what users install and what routers discover even when th
 
 **Example source**
 - `Agents365-ai/drawio-skill`: version-sync CI now fails when parsing or marketplace lookup fails and regression-tests equality between top-level and embedded skill versions.
+
+---
+
+## [PAT-076] Systemic-Failure Budget Circuit Breaker
+
+**Definition**
+Budget-consuming loops should classify failures by causal scope and terminate when repeated evidence shows a shared systemic cause that new attempts cannot escape.
+
+**Why it works**
+Blind retry limits treat independent trial variance and broken shared prerequisites as equivalent. A causal stop policy preserves compute, money, quota, and user attention while turning early termination into an explainable fallback rather than a silent collapse.
+
+**How to encode**
+- define a small ordered failure taxonomy with trial-local and systemic classes
+- make classification and stop policy deterministic where possible
+- stop after a declared number of consecutive same-cause systemic failures
+- do not stop the whole loop for failures that a different candidate can plausibly avoid
+- report the shared cause, attempts consumed, budget remaining, and recovery action
+- preserve `stopped` and `nothing promoted` as valid terminal outcomes
+- test mixed failures, repeated systemic failures, unknown causes, and successful recovery
+
+**Example source**
+- `sylvanus4/automl-train-skill`: classifies data, credential, infrastructure, schema, and model-code failures; consecutive systemic failures stop the sweep and remain visible in the structured report.
+
+---
+
+## [PAT-077] Portability Claim Proof Matrix
+
+**Definition**
+Skills that claim host, backend, language, or provider neutrality should prove the shared contract across representative implementation families and semantic edge directions.
+
+**Why it works**
+Several adapters can share the same hidden assumption, so counting adapters is not evidence of portability. A matrix that crosses implementation diversity with semantic polarity exposes contract leaks that a repeated happy path misses.
+
+**How to encode**
+- reduce the portable seam to a small explicit input/output contract
+- choose representative adapters that differ in implementation family, not only product name
+- include at least one language, process, or protocol boundary when the claim spans one
+- test opposite semantic directions such as minimize/maximize or allow/deny
+- run the same deterministic gates and output contract across every matrix cell
+- document untested adapters as compatible hypotheses, not proven support
+- keep host-specific setup outside the semantic core
+
+**Example source**
+- `sylvanus4/automl-train-skill`: proves one flat-config/numeric-metric contract with two different algorithms, a non-Python shell trainer, and both minimize and maximize promotion paths.
+
+---
+
+## [PAT-078] Portable Approval Principal Gate
+
+**Definition**
+Cross-channel approval workflows should resolve platform actors to one stable authorization principal and enforce that principal at the shared decision boundary, independent of the delivery adapter.
+
+**Why it works**
+Channel membership, display names, and platform-specific IDs describe reachability, not portable authority. Central enforcement prevents a direct API caller or alternate adapter from bypassing checks, while fail-closed resolution avoids granting power to an ambiguous actor.
+
+**How to encode**
+- distinguish notification destination from approval authority
+- define one normalized principal type shared across adapters
+- support per-action allowlists with an explicit default precedence
+- resolve adapter identities before submitting the decision
+- enforce the allowlist again in the shared runtime or decision API
+- leave the action pending when identity is missing, unresolved, or unauthorized
+- record both platform actor and normalized principal in the audit event
+- test direct API calls, case normalization, missing identity, unauthorized identity, and authorized approval
+
+**Example source**
+- `initializ/forge`: Slack resolves clickers to normalized email principals, while the shared runtime enforces per-tool/default approver allowlists and leaves deferred actions pending on `403`.
