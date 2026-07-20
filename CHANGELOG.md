@@ -6,6 +6,19 @@ This project follows a simple changelog style focused on meaningful repository e
 
 ---
 
+## 2026-07-20
+
+### Added
+
+- Added `research-hot-skills-2026-07-20.md` with current ClawHub and GitHub momentum evidence
+- Added `PAT-079 Invariant Feedback And Promotion Sovereignty`
+- Added `PAT-080 Focused Projection With Whole-Surface Backstop`
+- Added `PAT-081 Durable Recovery Anchor Before Notification Fan-Out`
+
+### Refined
+
+- Extended local review guidance for self-optimization invariants, fixture coverage backstops, and recoverable human-interaction delivery
+
 ## 2026-07-17
 
 ### Added

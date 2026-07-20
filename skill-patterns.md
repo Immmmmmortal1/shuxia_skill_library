@@ -1649,3 +1649,69 @@ Channel membership, display names, and platform-specific IDs describe reachabili
 
 **Example source**
 - `initializ/forge`: Slack resolves clickers to normalized email principals, while the shared runtime enforces per-tool/default approver allowlists and leaves deferred actions pending on `403`.
+
+---
+
+## [PAT-079] Invariant Feedback And Promotion Sovereignty
+
+**Definition**
+Self-optimizing skills should expose deterministic invariants to the candidate-search loop as feedback and independently re-enforce them at the final promotion boundary.
+
+**Why it works**
+A rule seen only at promotion wastes iterations on candidates that were never eligible. A rule used only as optimization feedback can be traded away for a better aggregate score. Dual placement guides search while keeping activation subject to an independent, non-negotiable check.
+
+**How to encode**
+- define narrow machine-checkable invariants separately from subjective quality rubrics
+- evaluate them during candidate generation and return specific violation evidence to the optimizer
+- recompute the same invariants on held-out outputs at promotion time
+- forbid aggregate judge gains from overriding a blocking invariant
+- define whether prevalence produces a block or warning, including denominator, threshold boundary, minimum samples, and zero-sample behavior
+- keep blocked candidates and their evidence available for diagnosis without activating them
+- test clean, minority, threshold-equal, pervasive, malformed-rule, and empty-sample cases
+
+**Example source**
+- `SlanchaAI/ingot`: per-skill forbidden-output criteria penalize the SkillOpt inner loop and are independently classified on held-out answers; pervasive violations block promotion while minority violations remain review warnings.
+
+---
+
+## [PAT-080] Focused Projection With Whole-Surface Backstop
+
+**Definition**
+Validation systems that project a broad contract into focused scenarios should also compare the complete safety-relevant surface so unselected changes cannot evade detection.
+
+**Why it works**
+Scenario-specific checks are explainable and low-noise, but every filter creates negative space. A global backstop catches new capabilities, permissions, or side effects that no fixture declared, while local projections still explain which user paths changed.
+
+**How to encode**
+- derive one canonical full surface of capabilities, permissions, scopes, and side effects
+- let each fixture select only the subset relevant to its contract
+- run focused diffs for scenario-level explanations
+- independently diff the full surface after all focused checks
+- deduplicate changes caught by both layers while preserving coverage metadata
+- make both local drift and global drift capable of failing the gate
+- test an unselected new capability, a selected scope change, overlapping detection, and a true no-change edit
+
+**Example source**
+- `RudrenduPaul/evolveguard`: fixtures filter a declared-and-inferred capability surface per prompt, while a separate whole-surface diff catches capabilities omitted from every fixture and suppresses duplicate reports.
+
+---
+
+## [PAT-081] Durable Recovery Anchor Before Notification Fan-Out
+
+**Definition**
+Human-interaction workflows should persist the actionable recovery state on the canonical task before attempting delivery through chat, email, push, or webhook adapters.
+
+**Why it works**
+Notification channels are ephemeral and identity, scope, or availability failures are routine. If the notification is the only copy of the action link or continuation reference, a delivery failure can strand a parked workflow even though its core state is valid.
+
+**How to encode**
+- store the action URL or token reference, subject, expiry, and continuation identity on the canonical task first
+- make the durable artifact renderable through a channel-independent UI or API
+- attempt notification fan-out only after persistence succeeds
+- treat per-channel delivery failure as visible degraded delivery, not loss of the pending action
+- resume from the canonical callback and state, never from message-local state alone
+- expire or revoke the durable action centrally and make every channel reflect that terminal state
+- test missing recipients, missing adapter scopes, duplicate delivery, callback after channel failure, expiry, and restart recovery
+
+**Example source**
+- `initializ/forge`: delegated-consent links are always written to the parked task's A2A `auth-required` artifact before optional Slack delivery, so channel failure does not remove the recovery path.
