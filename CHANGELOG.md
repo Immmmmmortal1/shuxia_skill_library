@@ -6,6 +6,18 @@ This project follows a simple changelog style focused on meaningful repository e
 
 ---
 
+## 2026-07-21
+
+### Added
+
+- Added `research-hot-skills-2026-07-21.md` with current ClawHub and GitHub momentum evidence
+- Added `PAT-082 Provenance-Bearing Generated Contract`
+- Added `PAT-083 Catalog-To-Runtime Availability Reconciliation`
+
+### Refined
+
+- Extended local review guidance for generated-contract lineage and static-catalog versus live-capability reconciliation
+
 ## 2026-07-20
 
 ### Added

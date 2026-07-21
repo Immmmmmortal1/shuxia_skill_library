@@ -1715,3 +1715,47 @@ Notification channels are ephemeral and identity, scope, or availability failure
 
 **Example source**
 - `initializ/forge`: delegated-consent links are always written to the parked task's A2A `auth-required` artifact before optional Slack delivery, so channel failure does not remove the recovery path.
+
+---
+
+## [PAT-082] Provenance-Bearing Generated Contract
+
+**Definition**
+Skill generators should carry approved source-item identities into each executable section and validate both the rendered requirement and its dependency edge.
+
+**Why it works**
+A complete-looking template can still invent specifics or omit confirmed constraints. Field-level lineage makes every generated input, workflow rule, output requirement, quality check, and permission boundary attributable and allows deterministic validation without overstating real-world quality.
+
+**How to encode**
+- assign stable identities to confirmed source items before generation
+- define which source layers are required in each executable section
+- render source identities beside the generated requirements
+- record item-to-artifact dependencies in a machine-readable manifest
+- reject missing sections, thin sections, missing required item identities, and missing dependency edges
+- reject output contracts whose requirement text is not derived from an approved workflow or domain item
+- keep structural and lineage validation distinct from field-usefulness or reliability claims
+
+**Example source**
+- `tsirou694-prog/flowprint`: generated skills carry classification item IDs through six required execution sections; the manifest and validator reject missing item dependencies and ungrounded output-contract text.
+
+---
+
+## [PAT-083] Catalog-To-Runtime Availability Reconciliation
+
+**Definition**
+Skill discovery systems should reconcile static catalog membership with installation and current-session exposure before recommending a capability or emitting an invocable trigger.
+
+**Why it works**
+A package manifest proves what a distribution owns, not what the active host loaded. Conflating those states produces dead handoffs, invented availability, and misleading onboarding when installation, refresh, compatibility, or host discovery is incomplete.
+
+**How to encode**
+- generate the static catalog from canonical registry metadata and skill frontmatter
+- inspect live capability inventory when the host exposes it
+- distinguish available now, installed but not discoverable, intentionally omitted, planned but unshipped, and external or unknown
+- report observed package and runtime versions when static and live state disagree
+- route mismatches to the native status, refresh, or update workflow without guessing the cause
+- recommend only currently exposed skills as immediately runnable
+- test missing runtime entries, stale receipts, planned names, external lookalikes, and fully available skills
+
+**Example source**
+- `platypeeps/se-ai-command-pack` `se-help`: joins a generated bundled-skill catalog with current capability inventory and preserves separate availability labels instead of treating package membership as runtime proof.
