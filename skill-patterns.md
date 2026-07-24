@@ -1759,3 +1759,41 @@ A package manifest proves what a distribution owns, not what the active host loa
 
 **Example source**
 - `platypeeps/se-ai-command-pack` `se-help`: joins a generated bundled-skill catalog with current capability inventory and preserves separate availability labels instead of treating package membership as runtime proof.
+
+---
+
+## [PAT-084] Executable Gate Review
+
+**Definition**
+When a skill ships or references scripts that write DONE/SUCCESS artifacts, the skill review must audit those executables for honor-system bypasses, not only SKILL.md prose.
+
+**Why it works**
+Agents obey the cheapest path that still produces the required file. A strict ban in markdown with a flag-only confirm script still yields forgeable DONE.
+
+**How to encode**
+- Step 1: detect `scripts/`, verify tools, confirm writers, gate templates
+- Step 8: list each DONE writer; ask if SUCCESS needs only agent-supplied booleans
+- Severity: prose forbids X but script allows X → ERROR, not a soft “missing Fallback” WARNING
+- Do not rank missing `Do not use when` above forgeable SUCCESS writers
+
+**Example source**
+- `play-store-screenshots`: `play-console-screenshot-confirm.sh` previously accepted `--phone-screenshots-listed true` with no browser evidence
+
+---
+
+## [PAT-085] Evidence-Backed Confirm
+
+**Definition**
+Confirm/record scripts must require a real evidence artifact (existing file with minimum size + hash recorded, or cryptographic/API match) before writing the DONE JSON.
+
+**Why it works**
+Raises the cost of skipping the real check. Does not fully prove UI content unless OCR/API is added, but blocks the empty “just run confirm” path.
+
+**How to encode**
+- require `--evidence <path>` (or equivalent) and fail if missing/too small
+- record `evidence_path` + hash in the DONE JSON
+- keep Claim vocabulary aligned with DONE (no vague “success” that covers public store state)
+- sync skill prose, product scripts, and pipeline templates together
+
+**Example source**
+- `play-store-screenshots` confirm script + Definition of DONE after INC-2026-07-24 follow-up

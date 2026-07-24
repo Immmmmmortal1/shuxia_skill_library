@@ -1,8 +1,14 @@
 ---
 name: shuxia-skill-library
-description: Use when creating, reviewing, or refining an agent skill and the goal is to make the skill more obedient, better bounded, and harder to misuse. Especially useful when extracting reusable ideas from strong external skills, turning them into boundary rules, constraint patterns, review checklists, and concrete revisions for local skills.
+description: >-
+  Use when creating, reviewing, or refining an agent skill and the goal is to
+  make the skill more obedient, better bounded, and harder to misuse. Especially
+  useful when extracting reusable ideas from strong external skills, turning
+  them into boundary rules, constraint patterns, review checklists, and concrete
+  revisions for local skills. When the target skill ships scripts or gate
+  tools, review those executables too — not only SKILL.md prose.
 metadata:
-  version: 0.1.5
+  version: 0.1.6
 ---
 
 # Shuxia Skill Library
@@ -111,11 +117,17 @@ Always review a target skill across these dimensions:
 8. `Artifact Quality Boundary`
    - For generated files, does the skill define technical validity checks beyond prose quality?
    - For image assets, does it reject wrong canvas size, thumbnail templates, and invalid output dimensions?
+   - For gate / DONE artifacts: can an Agent forge the success file by flags alone (honor-system script)?
 
 9. `Routing Discoverability Boundary`
    - Can the skill be found reliably from its `name`, `description`, and trigger wording?
    - Does it describe when to use it, not only what it does?
    - When many neighboring skills exist, is its boundary distinctive enough to reduce collisions?
+
+10. `Executable Gate Boundary`
+    - If the skill directory (or referenced templates) ships `scripts/` / gate tools, were those files reviewed?
+    - Do SUCCESS/DONE writers require evidence the agent cannot invent in one flag (`--ok true`)?
+    - Is a prose ban mirrored by a hard fail in the script, or only by documentation?
 
 ## Workflow
 
@@ -128,6 +140,9 @@ Identify:
 - what failure mode it is trying to prevent
 - whether it is a `technique`, `workflow`, `reviewer`, `orchestrator`, or `domain skill`
 - whether it produces a concrete artifact that needs technical validation such as exact image size
+- whether it ships or references **executable gates** (`scripts/`, verify tools, confirm writers, templates under `assets/`)
+
+If executable gates exist, the review **must** open those files in Step 8. Reviewing `SKILL.md` alone is incomplete and must not be scored as a full PASS.
 
 ### Step 2 — Decide whether a confirmation gate is required
 
@@ -228,7 +243,7 @@ For every strong idea, rewrite it as:
 - `Where to reuse`
 - `How to encode it in a skill`
 
-Store distilled ideas in [skill-patterns.md](/Users/xiaomao11/.codex/skills/shuxia-skill-library/skill-patterns.md).
+Store distilled ideas in [skill-patterns.md](skill-patterns.md).
 
 ### Step 8 — Audit the local target skill
 
@@ -243,6 +258,16 @@ When reviewing a local skill, report:
 - missing canvas or artifact validation for generated files
 - weak trigger wording that hurts discoverability
 - flat taxonomy or overlapping neighbors that hurt routing precision
+
+**Executable-gate sub-audit** (mandatory when `scripts/`, verify/confirm tools, or gate templates exist):
+
+1. List gate scripts and what DONE file each writes
+2. Check whether SUCCESS can be produced by agent-supplied booleans alone
+3. Check whether required evidence is a real artifact (file hash, API match, non-empty screenshot) vs a free-text claim
+4. Severity rule:
+   - prose forbids X but script still allows X → prefer **ERROR** (execution loophole), not only “missing Fallback section”
+   - missing `Do not use when` while gates are solid → usually **WARNING** (routing), do not outrank forgeable DONE
+5. Prefer repairs that harden the script **and** the skill workflow, not documentation-only bans
 
 ### Step 9 — Rewrite toward obedience
 
@@ -260,6 +285,7 @@ Prefer these repairs:
 - add confirmation gates when the skill is prone to drifting before user intent is locked
 - split broad skill families into hierarchy when a flat library causes collisions
 - recommend `recall then rerank` routing when the library is too large for full-list selection
+- for gate skills: require evidence artifacts in scripts; align Claim vocabulary with DONE; sync templates when scripts change
 
 ## Output Contract
 
@@ -296,6 +322,7 @@ Rules for this review format:
 - if a section is missing, say where it should be inserted and what job it serves
 - do not begin with a generic taxonomy unless the user explicitly asks for one
 - findings may still reference review dimensions, but they should be embedded inside the section-based review
+- when executable gates exist, include a short `Executable Gate Audit` subsection (scripts reviewed, forge risk, suggested script+prose fix)
 
 When this skill is used to create or revise a skill, the revised skill must include:
 
@@ -369,6 +396,12 @@ The following ideas are already accepted into this library and should be reused 
 - `Recall Then Rerank`
   - At larger scale, retrieve a small candidate set first, then let the model decide among them.
 
+- `Executable Gate Review`
+  - When a skill ships scripts that write DONE/SUCCESS artifacts, review those scripts for honor-system bypasses; forgeable DONE is an ERROR-class finding.
+
+- `Evidence-Backed Confirm`
+  - Confirm/record scripts must require a real evidence file (or cryptographic/API match), not only `--listed true` flags.
+
 `huashu-design` is a reference example for:
 
 - strong role lock
@@ -376,6 +409,13 @@ The following ideas are already accepted into this library and should be reused 
 - brand asset protocol
 - fallback via design-direction mode
 - anti-slop negative lists
+
+`play-store-screenshots` is a reference example for:
+
+- incident-locked negative list (Fastlane SUCCESS ≠ done)
+- API SHA evidence before claim
+- confirm script requiring `--evidence` file (raises forge bar; still not OCR)
+- Claim vocabulary aligned with DONE (no vague「上传成功」)
 
 ## Common Mistakes
 
@@ -390,6 +430,9 @@ The following ideas are already accepted into this library and should be reused 
 - Starting to draft the skill before the user has confirmed the core decisions
 - Asking five clarification questions at once and then guessing from partial answers
 - Reviewing an image-generation skill without checking exact canvas size and output dimension enforcement
+- Reviewing only `SKILL.md` when the skill ships `scripts/` or gate templates that write DONE artifacts
+- Ranking missing `Do not use when` above forgeable honor-system confirm/SUCCESS writers
+- Treating documentation-only bans as fixed when the companion script still accepts `--ok true`
 
 ## Real-World Goal
 
@@ -399,10 +442,11 @@ Each good external skill should leave behind reusable boundary patterns so futur
 
 ## Version
 
-Current version: 0.1.5
+Current version: 0.1.6
 
 ## Version History
 
+- 0.1.6 - Add Executable Gate Boundary: reviews must audit shipped scripts/templates; forgeable DONE is ERROR-class; prefer evidence-backed confirm over prose-only bans; harvest pattern from play-store-screenshots.
 - 0.1.5 - Add adjacent-skill routing split against MemHub skill publishing and self-improvement logging so the skill routes more clearly as a review/refine skill-for-skills.
 - 0.1.4 - Fix skill-review output to default to a section-based module review: current sections, how to change them, what to add, and why each change matters.
 - 0.1.3 - Add routing discoverability review, scale-aware skill hit-rate analysis, and rewrite rules for names, descriptions, hierarchy, and recall-then-rerank routing.

@@ -6,6 +6,23 @@ This project follows a simple changelog style focused on meaningful repository e
 
 ---
 
+## 2026-07-24
+
+### Added
+
+- Skill version **0.1.6**: `Executable Gate Boundary` (review lens #10)
+- Mandatory executable-gate sub-audit in Step 8 when `scripts/` / gate templates exist
+- Seed patterns: `Executable Gate Review`, `Evidence-Backed Confirm`
+- Pattern library: `PAT-084`, `PAT-085` (honor-system DONE writers; evidence-backed confirm)
+- Reference example notes for `play-store-screenshots` (incident-locked gates)
+
+### Refined
+
+- Severity rule: prose forbids X but script still allows X → prefer **ERROR**, not only “missing Fallback”
+- Common mistakes: reviewing only `SKILL.md`; ranking `Do not use when` above forgeable SUCCESS writers
+- Review output contract: include short `Executable Gate Audit` when gates exist
+- Fixed `skill-patterns.md` link to a relative path
+
 ## 2026-07-21
 
 ### Added
